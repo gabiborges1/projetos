@@ -6,7 +6,8 @@ Remove pixels da borda das imagens.
 Linguagem: R.
 
 # etapa-2-remocao-sujeiras.ipynb
-Remove objetos não desejados e ruídos das imagens utilizando o mapeamento por threshold e extraindo maior polígono da imagem binária resultante.
+Remove objetos não desejados e ruídos das imagens.
+Primeiro é feito um mapeamento dos objetos da imagen através do mapeamento por threshold, em seguida é extraido maior polígono da imagem binária resultante, por fim, é feito um merge entre a imagem original e a imagem binária contendo o maior polígono. O resultado é uma imagem da mama sem objetos indesejados. 
 Linguagem: Python.
 
 # etapa-3-resize-imagens.ipynb
