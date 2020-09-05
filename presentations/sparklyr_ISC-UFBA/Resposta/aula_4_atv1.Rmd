@@ -1,0 +1,184 @@
+---
+title: "aula_3_atv1"
+author: "Gabriela L. Borges"
+date: "10/23/2019"
+output: html_document
+---
+# Introdução ao R - Manipulação de dados
+
+Essa seção contém as atividades que serão utilizadas durante a aula 1 de introdução ao R.
+
+O objetivo é que o aluno seja capaz de:
+1. Importar banco de dados usando R base
+2. Importar banco de dados usando tidyverse
+3. Manipulação de dados com dplyr
+4. O operador pipe 
+5. Fazer agregações dos dados
+6. Utilizar o pacote esquisse para fazer gráficos
+7. Fazer merge de tabelas
+
+## Abrindo as bases de dados 
+
+Utilize o chunk de código abaixo para importar os pacotes que utilizaremos e abrir as bases de dados do SIM BA e de Brazil cities.
+
+```{r}
+library(readr)
+
+my_df <- read_csv("extracao_sim2017_2019_10_13.csv")
+my_df_cities <- read_csv("BRAZIL_CITIES_poly.csv")
+```
+
+## Wrap up
+
+```{r}
+## Já instalou os pacotes dplyr e tidyr? Já chamou os pacotes?
+library(dplyr)
+library(tidyr)
+
+```
+
+90% do seu tempo gasto deixando seus dados em formato analítico são resolvidos com as funções	mutate(), select(), filter(), arrange(), groub_by(), summarise(). Os outros 10% vão ser gastos usando o pacote tidyr.
+
+1. A função filter() filtra linhas utilizando uma comparação lógica. Para fazer várias comparações use os operadores & e |.
+
+2. A função select() seleciona colunas. É possível utilizar nomes, índices e intervalos de variáveis para selecionar variáveis.
+
+3. A função arrange() ordena as linhas. A função desc pode ser utilizada para gerar uma ordem decrescente.
+
+4. A função mutate() cria ou altera colunas. Novas variáveis precisam ter o mesmo número de linhas da base original.
+
+5. A função summarise() sumariza os dados. Aplica uma função qualquer às variáveis e retorna um vetor de tamanho 1.
+
+6. O pipe usa o valor resultante da expressão do lado esquerdo como primeiro argumento da função do lado direito. O operador pipe é uma função do pacote magrittr. Aperte as teclas <ctrl> + <shift> + <M> como shortcut para construir o pipe. O pipe pode ser utilizado em conjunto com o pacote dplyr para construir pipelines de manipulação de dados.
+
+7. A função group_by() agrupa os dados. O group_by recebe um tibble e transforma ele em um tbl agrupado (não altera seu número de linhas ou colunas)
+
+```{r}
+# Sem o pipe
+group_by(my_df, CODMUNRES)
+
+# Com o pipe
+my_df %>% group_by(CODMUNRES)
+
+# Veja que o número de linha do tibble resultante não é alterado com apenas o group_by()
+my_df %>% group_by(CODMUNRES) %>% ncol()
+```
+
+As operações feitas no tibble após um group_by() serão feitos por grupo. A função group_by é geralmente utilizada junto com a função summarise() ou mutate(). Summarise após um group_by() reduz o tamanho da base original para o número de valores distintos da variável de agrupamento.
+
+### Exercicios 
+
+1. Crie uma variável na base de dados my_df com o CID de três digítos CID3dig. Em seguida, crie outra variável ind_tuberculosis para indicar se o óbito foi por causa de tuberculosis (CIDs A10 a A16).  PS: Utilize as funções do dplyr e lembre-se de guardar o resultado utilizando o operador de assignment.
+
+```{r}
+my_df <- my_df %>% 
+  mutate(CID3dig = substr(CAUSABAS, start = 1, stop = 3),
+         ind_tuberculosis = CID3dig %in% c("A10", "A11", "A12", "A13", "A14", "A15", "A16")
+         )
+```
+
+2. Agrupe os dados de my_df pela variável CODMUNRES, em seguida summarise o resultado para retornar o número de óbitos totais e o número de óbitos por tuberculose e guarde no objeto obitos_mun. Veja que a base my_df é a base de dados de mortalidade e cada linha representa as informações de um óbito. Você pode utilizar a função n() pra contar o número de linhas e consequentemente o número de óbitos. Utilize a variável que criamos na questão 1 para calcular o número de óbitos por tuberculosis.
+
+```{r}
+obitos_mun <- my_df %>% 
+  group_by(CODMUNRES) %>% 
+  summarise(
+    n_obitos = n(),
+    n_obitos_tb = sum(ind_tuberculosis),
+    n_obitos_mulheres = sum(SEXO == "Feminino", na.rm = T),
+    prop_mulheres = n_obitos_mulheres/n_obitos*100,
+    n_obitos_menos5 = sum(IDADEanos <= 5, na.rm = T)
+  )
+```
+
+3. Selecione do banco my_df_cities as colunas referentes aos dados do IBGE e aos dados do IDHM, a coluna com o nome da cidade a coluna com o código do IBGE do município. Em seguida filtre as linhas com na's na variável CD_GEOCMUN. Guarde o resultado em df_cities. PS: Utilize as funções do dplyr. (DICA: select e depois filter, utilize o operador pipe)
+
+```{r}
+df_cities <- my_df_cities %>% 
+  select(CITY, CD_GEOCMU, starts_with("IBGE"), starts_with("IDHM")) %>% 
+  filter(!is.na(CD_GEOCMU))
+```
+
+4. Crie a variável CODMUN na base de dados df_cities com os seis primeiros digitos da variável CD_GEOCMUN. Essa variável indica qual o código do município sem o dígito verificador.
+
+```{r}
+df_cities <- df_cities %>% 
+  mutate(CD_GEOCMU = as.numeric(substr(CD_GEOCMU, 1, 6)))
+```
+
+## Group_by + mutate
+
+Mutate após um group_by() mantém a base do tamanho original mas faz os cálculos levando em consideração a variável de agrupamento. Propriedade de replicação: Linhas com mesmo valor da variável de agrupamento teram o mesmo valor da variável criada no mutate. 
+
+```{r}
+obitos_agregados <- my_df %>%
+    group_by(CODMUNRES) %>% # Cálculos a partir daqui serão feitos por obs no msm mun
+    mutate(
+      n_obitos = n(),
+      n_obitos_tb = sum(ind_tuberculosis == T)
+    ) # Utilize a função mutate para calcular resultados agregados sem reduzir dimensionalidade dos dados
+
+## FAÇA VOCÊ: Compare o número de linhas, número de colunas e estrutura das bases de dados obitos_agregados e obitos_mun. 
+
+```
+
+## Funções de Join
+
+O Join ou merge é utilizado para juntar dois conjuntos de dados. Os dois conjuntos de dados são linkados utilizando uma ou mais chaves/variáveis. O join é o mesmo que a função PROCV() no excel e merge do STATA.
+
+Existem vários tipos de join e cada tipo de join tem sua respectiva função no dplyr:
+	inner_join() - Merge da intersecção
+	left_join() - Merge na tabela da esquerda
+	right_join() - Merge na tabela da direita
+	full_join() - Merge total entre as duas bases
+
+As funções de join recebem os mesmos argumentos, (x) a tabela da direita, (y) a tabela da esquerda e (by) vetor com o nome das variáveis que serão utilizadas para o merge.
+
+1. Utilize os bancos de dados df_cities e obitos_mun para fazer o join através do código do município. Selecione o Join que retorne somente os municípios encontrados na tabela obitos_mun. Guarde o resultados em dados_final. Utilize a função write_csv para salvar a tabela em um arquivo .csv.
+
+```{r}
+dados_final <- right_join(
+    x = df_cities, y = obitos_mun, by = c('CD_GEOCMU' = 'CODMUNRES')
+  )
+
+write_csv(dados_final, "C://Users/gabil/Documents/curso R/data/dados_joined.csv")
+```
+
+## O pacote esquisse
+
+O ggplot2 é um pacote para visualização de dados do R (fruto da tese de doutorado de Hadley Wickham). A construção dos principais aspectos de um gráfico no ggplot2 são divididos em camadas, construídas uma a uma na elaboração do gráfico. 
+
+```{r}
+## FAÇA VOCÊ: Instale o pacote ggplot2
+install.packages("ggplot2")
+install.packages("esquisse")
+```
+
+O pacote esquisse é um aplicativo em Shiny que utiliza uma base de dados do seu enviroment do R e constrói um ambiente para você fazer gráficos do ggplot2. Você consegue construir todos os tipos de gráficos do ggplot2, além de fazer filtros e modificações nas escalas das variáveis. Os gráficos podem ser exportados em png ou você pode pegar o código de construção do gráfico.
+
+```{r}
+## FAÇA VOCÊ: Instale o pacote esquisse e faça library dos pacotes ggplot2, esquisse e dplyr
+library(ggplot2)
+library(esquisse)
+
+## FAÇA VOCÊ: Utilize a função esquisse para abrir o ambiente de criação de gráficos com o banco de dados dados_final
+esquisse::esquisser()
+```
+
+## O pacote swirl
+
+O swirl é um pacote que contém funções que conversam com o usuário e, por meio dessas, vai ensinando  R.
+
+```{r}
+install.packages('swirl')
+library(swirl)
+swirl()
+```
+
+Dado que o pacote esteja carregado, você tem várias opções de cursos, desde o básico de programação em R até análise de dados. O procedimento para “carregar” um curso é:
+
+```{r}
+swirl::swirl()
+```
+
+

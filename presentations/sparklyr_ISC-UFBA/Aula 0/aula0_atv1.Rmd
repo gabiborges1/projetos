@@ -1,0 +1,355 @@
+---
+title: "Aula 0 - Primeiros passos no R"
+author: "Gabriela L. Borges"
+date: "10/1/2019"
+output: html_document
+---
+
+# Sobre o R Markdown
+
+Esse é um documento Rmarkdown. Markdown é uma sintaxe simples de formatação para HTML, PDF e documentos Words. Os textos encapsulados por três crases (`) são códigos em R. Os textos fora dessa área são textos do Markdown. Para mais detalhes em como utilizar o R Markdown veja <http://rmarkdown.rstudio.com>.
+
+Quando você clica no botão **Knit** um documento será gerado contendo os textos escritos em Markdown e os outputs dos códigos em R. Um novo chunk de códigos em R pode ser criado através do atalho do teclado Ctrl + Alt + i.
+
+Você pode adicionar códigos em R assim:
+
+```{r}
+plot(cars)
+```
+
+# Introdução ao R - Primeiros passos no R
+
+Essa seção contém as atividades que serão utilizadas durante a aula 0 de introdução ao R.
+
+O objetivo é que o aluno seja capaz de:
+1. Diferenciar o objetivo de cada painél do Rstudio
+2. Utilizar funções básicas do R
+3. Utilizar o R como calculadora
+4. Fazer atribuição de variáveis
+5. Diferenciar entre os tipos de dados do R
+6. Utilizar o R para fazer comparações lógicas.
+7. Entender a hierárquia de coerção de tipagens do R
+8. Manipular as tipagem do R.
+
+## Comandos básicos
+
+```{r}
+# A função **demo()** mostra alguns exemplos de aplicações de um determinado pacote.
+demo(graphics)
+
+# A função **help()** serve pra você saber como usar uma função específica.
+help(mean)
+
+# A função **ls()** lista os objetos que estão guardados no enviroment.
+ls()
+
+# A função **rm()** serve pra você excluir um objeto específico do enviroment do R.
+rm(list = ls()) # Excluindo  tudo.
+
+# A função q() é utilizada para finalizar a sessão do R.
+q()
+```
+
+
+
+## R como calculadora
+
+Os comandos abaixo podem ser utilizados para utilizar o R como calculadora:
+```{r}
+# adição
+1 + 1
+
+# subtração
+4 - 2
+
+# multiplicação
+2 * 3
+
+# divisão
+5 / 3
+
+# potência
+4 ^ 2
+
+### PRA vOcê: Calcule o modulo entre 154 e 4 (Faça você)
+
+
+### PRA vOcê: Calcule a parte inteira da divisão entre 5 e 2 (Dica: operador %/%)
+
+
+```
+
+Algumas outras funções para fazer cálculos no R são as funções sqrt() para calcular a raiz quadrada de um número, log() para calcular o logaritmo de um número e exp() para calcular a exponencial de um número. 
+```{r}
+# Raiz quadrada
+5 ^ (1/2)
+sqrt(5)
+
+### PRA vOcê: Calcule o logaritmo de 0.35
+
+
+### PRA vOcê: Calcule o exponencial de -0.75
+
+
+```
+
+Os comandos abaixo podem ser utilizados para fazer comparações logicas no R:
+```{r}
+# Igual a
+1 == 1
+
+# Diferente de
+4 != 2
+
+# Maior que
+2 > 3
+
+# Maior igual a 
+5 >= 3
+
+### PRA vOcê: Verifique se 5 é menor que 8 (Faça você)
+
+
+### PRA vOcê: Verifique se 7.99 é menor igual que 8.
+
+
+```
+
+### Exercícios:
+
+1. Qual o resultado da divisão de 1 por 0 no R? e de -1 por 0?
+```{r}
+
+```
+
+2. Qual o resultado da multiplicação de 1 por Inf no R? e a multiplicação entre 0 e Inf? 
+```{r}
+
+```
+
+3. Qual o resultado da raiz quadrada de um número negativo (ex: -5)? e qual o resultado do logaritmo de um número negativo? 
+```{r}
+
+```
+
+4. Calcule o valor do número de ouro no R (veja a formula em: <https://www.significados.com.br/numero-de-ouro/>)
+```{r}
+
+```
+
+5. Sem rodar o código, calcule o que a expressão 5 + 3 * 10 %/% 3 == 15 vai resultar no R. Em seguida, apenas utilizando parênteses, faço a expressão retornar o valore contrário (i.e., se originariamente for TRUE, faça retornar FALSE).
+```{r}
+
+```
+
+## Atribuição de variável
+
+Um conceito básico de programação é chamado de variável. A variável permite que você guarde um valor (ex. 4) ou um objeto (ex. um dataframe) no R. Você pode usar o nome da variável para acessar o valor/objeto guardado dentro da variável.
+```{r}
+# Guarde o valor 42 em my_var
+my_var <- 42
+
+# Print o valor da variável my_var 
+my_var
+
+### PRA vOcê: Guarde o valor 5 a variável my_apples e depois print o resultado de my_apples
+my_apples <-
+
+### PRA vOcê: Guarde o valor 6 a variável my_oranges e depois print o resultado de my_oranges
+my_oranges <- 
+
+### PRA vOcê: Guarde o valor da soma entre my_apples e my_oranges na variável my_fruit
+my_fruit <-
+```
+
+Se você utilizar o nome de uma variável criada para guardar um outro valor ou objeto, o valor da variável vai ser substituído.
+```{r}
+### PRA vOcê: Substitua o valor de my_apples para 9
+my_apples <-
+
+### PRA vOcê: Print o valor de my_apples
+```
+
+O R case sensive, isto é, o R diferencia entre letras maiúsculas e letras minúsculas. Se você criar uma variável (ex. my_apples) e tentar acessar o valor dessa variável com o nome diferente (ex. My_apples) o R pode retornar um erro ou retornar o valor incorreto.
+```{r}
+# Printando o resultado de my_apples com o R na escrita do nome da variável
+MY_apples
+
+### PRA vOcê: Conserte o R acima corrigindo o nome da variável 
+```
+
+### Exercícios:
+(Ps: Utilize o atalho Ctrl + Alt + i para construir um novo chunck de códigos em R)
+
+1. Guarde o valor 1 na variável num1 e o valor 0 na variável num2. Qual o resultado da divisão de num1 por num2 no R? e de -num1 por num2? 
+```{r}
+
+```
+
+2. Guarde o valor 1 na variável num1 e o valor Inf na variável num2. Sem fazer contas, qual o resultado da multiplicação de num1 por num2 no R?  
+
+3. Guarde o valor 1 na variável num1 e o valor Inf na variável num2. Qual o resultado da raiz quadrada de um número negativo (ex: -5)? e qual o resultado do logaritmo de um número negativo? 
+
+4. Calcule o valor do número de ouro no R e guarde no objeto num_ouro.
+
+5. Guarde o valor -num_ouro na variável num_outro. No final, qual o resultado estará guardado nessa variável?
+
+## Tipos básicos de dados
+
+Para cada tipo de dado, existem operações permitidas e não permitidas. Veja o exemplo a seguir em que construímos uma variável númerica e outra variável character e tentamos fazer a soma:
+```{r}
+# Guarde o valor 5 na variável my_apples
+my_apples <- 5
+
+# Guarde o valor "six" na variável my_oranges
+my_oranges <- "six"
+
+# Crie a variável my_fruit e print o resultado
+my_fruit <- my_apples + my_oranges 
+my_fruit
+```
+
+No R existem quatro principais tipos de dados (5 na verdade): são os dados **double**, **integer**, **logical** e **character**. Veja que as aspas indicam que "some text" é um caracter. Além disso o script do Rstudio diferencia a cor dos tipos de dados **character** e **logical**.
+```{r}
+# Um double
+my_numeric <- 45.2
+
+# Um inteiro
+my_integer <- 4L
+
+# Um caracter
+my_character <- "some text" 
+
+# Um lógico
+my_logical <- FALSE
+```
+
+Os tipos **double** e **integer** são utilizados para guardar números e quantidade. O tipo double é um valor númerica contínuo enquanto o integer é utilizado para númericos discretos.
+```{r}
+# A double
+my_double <- 25
+
+### PRA VOCÊ: Guarde o valor 25 na variável my_integer (Garanta que esse valor seja um inteiro)
+my_integer <- 
+```
+
+O tipo **character** é utilizado para representar uma sequência de caracteres. As aspas duplas ("") ou aspas simples ('')  indicam que o valor da variável é um character. É importante utilizar o mesmo tipo de aspas no início e final da string. 
+```{r}
+### PRA VOCÊ: Guarde o seu nome na variável my_name utilizando aspas duplas.
+my_name <- 
+
+### PRA VOCÊ: Guarde o seu sobrenome na variável my_last_name utilizando aspas simples
+my_last_name <- 
+```
+
+Além disso, se você digitar um comando incompleto (eg. Não fechar aspas, não fechar parenteses, ...) e apertar Ctrl + Enter, o R mostrará um +, o que não tem nada a ver com somar alguma coisa. Isso significa que o R está esperando que você complete o seu comando. Termine o seu comando ou aperte Esc para recomeçar. Veja o exemplo abaixo e finalize o código.
+```{r}
+my_name <- 'Gabriela
+```
+
+O tipo **logical** só pode assumir dois valores: TRUE ou FALSE. Geralmente dados lógicos são resultados de comparações lógicas.
+```{r}
+### PRA VOCÊ: Guarde o valor FALSE na variável my_false utilizando as abreviações.
+my_false <- 
+
+### PRA VOCÊ: Guarde o valor TRUE na variável my_true utilizando as abreviações.
+my_true <- T
+```
+
+As funções **class** e **typeof** podem ser usadas para identificar qual o tipo/classe de dados de uma variável ou valor (Veja que essas funções retornam um character).
+```{r}
+# Utilizando a função class
+class(my_true)
+
+# Utilizando a função typeof
+typeof(my_true)
+```
+
+Você pode usar as funções da classe **is.<class>** pra verificar se um objeto ou variável é de uma determinada class (Veja que essas funções retornam um logical)
+```{r}
+# Utilizando a função is.numeric()
+is.numeric(my_true)
+
+# Utilizando a função is.logical()
+is.logical(my_true)
+```
+
+Você pode usar as funções da classe **as.<class>** pra TRANSFORMAR a tipagem de um objeto ou variável para uma outra determinada class. A coerção de dados para uma nova tipagem se baseia nas regras de coerção de dados do R.
+```{r}
+# Utilizando a função as.numeric()
+my_number <- as.numeric(my_true)
+my_number
+
+# Utilizando a função as.character()
+my_character <- as.character(my_true)
+my_character
+```
+
+### Exercícios:
+(Ps: Utilize o atalho Ctrl + Alt + i para construir um novo chunck de códigos em R)
+
+1. Guarde o valor 25.0L na variável my_integer e printe o seu valor. Por que apareceu uma mensagem de warning? Qual o tipo de dados resultante?
+```{r}
+
+```
+
+2. Guarde o valor 25.7L na variável my_double e printe o seu valor. Por que apareceu uma mensagem de warning? Qual o tipo de dados resultante?
+
+3. Guarde o valor "FALSE" na variável my_variable. Qual o tipo de dados de my_variable?
+
+4. Calcule o valor do número de ouro no R e guarde no objeto num_ouro. Utilize a função as.logical pra transformar a variável num_ouro em logico e guarde seu resultado na variável my_evaluation. Printe o resultado de my_evaluation.
+
+5. Guarde o valor "some text" na variável my_text. Utilize a função as.logical pra transformar as variáveis my_text e my_variable (da questão 3) em valor lógico. Guarde o resultados das alterações nas variável my_eva_text e my_eva_var. Printe os valores resultantes das alterações.
+
+
+
+
+
+
+
+
+## Estrutura de dados 
+
+### Vetores
+
+Os vetores no R são os objetos mais simples que podem guardar objetos atômicos (Vistos na seção anterior).
+```{r}
+# Guarde os valores 25, 32 e 21 no vetor my_numeric_vector
+my_numeric_vector <- c(25, 32, 21)
+
+### PRA vOcê: Guarde os characters mangas, bananas e uvas no vetor my_character_vector
+my_character_vector <- 
+```
+
+O vetor tem sempre a mesma classe dos objetos que guarda, e consequentemente herda as operações possíveis e não possíveis de sua classe.
+```{r}
+# Veja a classe do vetor my_numeric_vector
+class(my_numeric_vector)
+
+# Veja a classe do vetor my_character_vector
+class(my_character_vector)
+```
+
+O R case sensive, isto é, o R diferencia entre letras maiúsculas e letras minúsculas. Se você criar uma variável (ex. my_apples) e tentar acessar o valor dessa variável com o nome diferente (ex. My_apples) o R pode retornar um erro ou retornar o valor incorreto.
+```{r}
+# Printando o resultado de my_apples com o R na escrita do nome da variável
+MY_apples
+
+### PRA vOcê: Conserte o R acima corrigindo o nome da variável 
+```
+
+### Exercícios:
+(Ps: Utilize o atalho Ctrl + Alt + i para construir um novo chunck de códigos em R)
+
+1. Guarde o valor 1 na variável num1 e o valor 0 na variável num2. Qual o resultado da divisão de num1 por num2 no R? e de -num1 por num2? 
+```{r}
+
+```
+
+2. Guarde o valor 1 na variável num1 e o valor Inf na variável num2. Sem fazer contas, qual o resultado da multiplicação de num1 por num2 no R?  
+
+3. Guarde o valor 1 na variável num1 e o valor Inf na variável num2. Qual o resultado da raiz quadrada de um número negativo (ex: -5)? e qual o resultado do logaritmo de um número negativo? 
+
+4. Calcule o valor do número de ouro no R e guarde no objeto num_ouro.
+
+5. Guarde o valor -num_ouro na variável num_outro. No final, qual o resultado estará guardado nessa variável?

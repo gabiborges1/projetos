@@ -1,0 +1,85 @@
+---
+title: "aula_7_atv_1"
+author: "Gabriela L. Borges"
+date: "11/20/2019"
+output: html_document
+---
+
+# O sparklyr
+
+O sparklyr é um pacote que fornece uma interface entre o R e o Apache Spark. O sparklyr surgiu a pedido da comunidade do R querendo uma interface dplyr nativa para o Spark. O sparklyr também fornece interfaces para os algoritmos de aprendizado de máquina distribuída do Spark entre outros. Como destaques temos:
+
+```{r}
+# Sempre chamar o pacote sparklyr
+# Instalação do spark: spark_install(version = "2.1.0")
+# Precisa ter instalado o Java no seu pc
+install.packages("sparklyr")
+library(sparklyr)
+library(dplyr)
+```
+
+# Conectando no Spark
+
+Você pode se conectar a ambas as instâncias locais do Spark, bem como aos clusters remotos do Spark.Para isso é necessário usar o Rstudio Server ou o Pro. Aqui vamos nos conectar a uma instância local:
+
+```{r}
+sc <- spark_connect(master = "local")
+sc # dados sobre a conexão com o spark
+```
+
+# Lendo dados no spark
+
+Você pode ler dados no Spark DataFrames usando as seguintes funções:
+1. spark_read_csv: lê um arquivo CSV e fornece uma fonte de dados compatível com dplyr
+2. spark_read_json: lê um arquivo JSON e fornece uma fonte de dados compatível com dplyr
+3. spark_read_parquet: lê um arquivo em parquet e fornece uma fonte de dados compatível com dplyr
+
+As funções de leituras de arquivos tem 4 importantes parâmetros: o sc, name, path e memory.
+1. sc - é o objeto que você guardou a conexão com o spark
+2. name - é o nome do database dentro da conexão com o spark
+3. path - é o endereço do arquivo dos dados
+4. memory - é para dizer se o spark pode guardar os dados na memoria (memory = F é p usar o disco)
+```{r}
+# O resultado do spark_read_csv tem que ser guardado em um objeto do R
+dados_sim <- spark_read_csv(sc, name = "sim_ba", path = "data/sim_ba_2010_2017.csv", memory = F)
+
+
+```
+
+Apesar de darmos um nome no Spark para a tabela que lemos, para fazer manipulações dentro do R estaremos utilizando o nome do objeto que guardamos o resultados da leitura da base (no nosso caso, o dados_sim). 
+As manipulações em dados_sim precisam ser feitas utilizando as funções do dplyr (somente).
+
+```{r}
+# Contando o número de linhas:
+nrow(dados_sim)
+n_linhas <- dados_sim %>% summarise(n = n())
+
+## Faça você: Construa uma variável com o ano_obito que retorna os últimos quatro dígitos da variável DTOBITO. Construa uma variável mes_obito que retorna os digitos 3 e 4 da variável DTOBITO. Em seguida faça um agrupamento pelo ano de óbito e mês e summarise retornando o número de linhas (óbitos) por ano e mês de óbito. Guarde o resultado em obitos_temporal.
+obitos_temporal <- dados_sim %>% 
+  mutate(mes_obito = substr(DTOBITO, 3, 4),
+         ano_obito = substr(DTOBITO, 5, 9)) %>% 
+  group_by(mes_obito, ano_obito) %>% 
+  summarise(n = n())
+
+
+```
+
+Os resultados de manipulações com tabelas do spark são tabelas do spark e precisam sempre ser manipuladas utilizando as funções do dplyr ou do Spark. Após a criação dos seus pipelines de redução e manipulação de dados você pode trazer a tabela pra uma tabela comum do R usando a função collect().
+
+```{r}
+collected_obitos_temporal <- obitos_temporal %>% collect() # O resultado é um tibble comum do R e pode ser manipulado usando qualquer pacote e função do R base.
+
+esquisse::esquisser(collected_obitos_temporal)
+```
+
+Para cada spark_read tem o equivalente spark_write. Para salvar os dados em spark você precisa dizer qual é o objeto do R que guarda a tabela spark que você quer salvar e qual o endereço final que você quer salvar.
+
+```{r}
+## Faça você: Salve a tabela guardada em obitos_temporal em um arquivo parquet.
+spark_write_parquet(obitos_temporal, "data/banco_temporal")
+df_parquet <- spark_read_parquet(sc, name = "obitos_temporal", path = "data/banco_temporal/")
+
+df_parquet %>%
+  glimpse()
+```
+

@@ -1,0 +1,103 @@
+---
+title: "aula_7_atv_1"
+author: "Gabriela L. Borges"
+date: "11/20/2019"
+output: html_document
+---
+
+# Conectando no Spark
+
+Você pode se conectar a ambas as instâncias locais do Spark, bem como aos clusters remotos do Spark. Para isso é necessário usar o Rstudio Server ou o Pro. Aqui vamos nos conectar a uma instância local:
+
+```{r}
+library(sparklyr)
+library(dplyr)
+sc <- spark_connect(master = "local")
+sc # dados sobre a conexão com o spark
+```
+
+# Lendo dados no spark
+
+Você pode ler dados no Spark DataFrames usando as seguintes funções:
+1. spark_read_csv: lê um arquivo CSV e fornece uma fonte de dados compatível com dplyr
+2. spark_read_json: lê um arquivo JSON e fornece uma fonte de dados compatível com dplyr
+3. spark_read_parquet: lê um arquivo em parquet e fornece uma fonte de dados compatível com dplyr
+
+1. No Chunk de R abaixo leia no SPARK as bases do SIM_2001_a_2017 em parquet e a base de dados BRAZIL_CITIES.csv e guarde em objetos do R.
+```{r}
+df_sim
+df_brazil_cities
+```
+
+# Agora é com vocês: Manipulações de dados
+
+2. Construa uma variável com o ano_obito que retorna os últimos quatro dígitos da variável DTOBITO.
+
+3. Crie uma variável na base de dados do SIM com o CID de três digítos. Em seguida, crie outra variável ind_tuberculosis para indicar se o óbito foi por causa de tuberculosis (CIDs A10 a A16).  PS: Utilize as funções do dplyr e lembre-se de guardar o resultado utilizando o operador de assignment.
+
+4. Selecione do banco df_brazil_cities as colunas referentes aos dados do IBGE e aos dados do IDHM, a coluna com o nome da cidade a coluna com o código do IBGE do município. Em seguida remova as linhas com na's na variável CD_GEOCMUN. Em seguida, filtre a base para conter somente as informações das cidades da BAHIA. Guarde o resultado em df_cities_ba. 
+
+5. Crie a variável CODMUN na base de dados df_cities_ba com os seis primeiros digitos da variável CD_GEOCMUN. Essa variável indica qual o código do município sem o dígito verificador.
+
+6. Faça um agrupamento na base do SIM pelo ano de óbito e CODMUNRES e summarise retornando o número de linhas (óbitos) e o número de óbitos por tuberculosis. Guarde o resultado em obitos_temporal.
+
+7. Faça um filtro na base de dados obitos_temporal para retornar somente as informações de óbitos do ano de 2010. Guarde o resultados em obitos_2010_ba.
+
+8. Utilize os bancos de dados df_cities_ba e obitos_2010_ba para fazer o join através do código do município. Selecione o Join que retorne as informações de todos os municípios da Bahia. Em seguida, verifica os municípios que não tiveram informações de óbitos no ano de 2010 (Tem NA nas variáveis do SIM) e substitua o valor NA por 0. Guarde o resultados em dados_final. Utilize a função spark_write_csv para salvar a tabela em um arquivo .csv.
+
+# Se arriscando com aprendizado de máquina no Spark
+
+O sparklyr fornece três famílias de funções para você utilizar com a biblioteca de Machine Learning do Spark.
+
+```{r}
+# Verifique as funções que existem nas três familias de função do MLlib
+sparklyr::ml_
+sparklyr::ft_
+sparklyr::sdf_
+```
+
+As funções do ml_* recebem como argumento uma string com o nome da variável resposta e um vetor de strings como o nome das features. As features também podem ser expressas usando o conceito de fórmulas do R (Não aceita termos de interação, por enquanto).
+
+```{r}
+# Testando com a base do iris
+iris_tbl <- copy_to(sc, iris, "iris", overwrite = TRUE)
+
+# Dividindo base em treino e teste
+partitions <- iris_tbl %>% 
+  sdf_random_split(training = 0.7, test = 0.5, seed = 888)
+
+# Treinando/Estimando regressão logística na base de treino
+model_lr <- partitions$training %>% 
+  ml_logistic_regression(
+    response = "Species", 
+    features = c("Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width")
+    )
+
+# Ver informações sobre coeficientes do modelo
+summary(model_lr)
+
+# Verificando predição na base de teste
+predicted <- ml_predict(model_lr, partitions$test) %>%
+  collect()
+
+# Matriz de confusão
+table(observado = predicted$Species, estimado = predicted$predicted_label)
+```
+
+Vamos fazer agora na nossa base de dados obitos_ba. Vamos utilizar as funções sociodemográficas do município pra tentar prever o número de óbitos por tuberculosis no município.
+
+```{r}
+# Divida a base em treino (0.75) e teste (0.25)
+
+# Treine/Estime uma regressão Linear na base de treino usando como response a variavel de número de óbitos por tuberculosis e como features as variáveis do IBGE.
+
+# Veja as informações sobre coeficientes do modelo
+
+# Verifique predição na base de teste
+
+# Utilize a função esquisse para construir um gráfico em que no eixo X é o valor observado e no eixo Y o valor estimado pelo algoritmo de ML.
+
+# DESAFIO: Melhore a predição desse algoritmo de ML (Dica: Use novas variáveis, modifique as existentes, faça transformações não lineares com as funções do dplyr, do sdf e do ft)
+```
+
+

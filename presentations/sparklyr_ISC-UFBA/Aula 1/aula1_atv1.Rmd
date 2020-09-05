@@ -1,0 +1,542 @@
+---
+title: "Aula 1- Primeiros passos no R"
+author: "Gabriela L. Borges"
+date: "10/6/2019"
+output: html_document
+---
+
+# Introdução ao R - Primeiros passos no R
+
+Essa seção contém as atividades que serão utilizadas durante a aula 1 de introdução ao R.
+
+O objetivo é que o aluno seja capaz de:
+1. Diferenciar as estruturas de dados no R.
+2. Acessar elementos dentro de estruturas de dados.
+3. Aprender a fazer controles de fluxo no R.
+5. Entender os conceitos de funções e seus componentes.
+6. Instalar pacotes no R.
+7. Fazer sua própria função no R.
+8. Fazer sua própria regressão e teste estatístico.
+
+## Estruturas de dados 
+
+A R permite que você guarde um valor (ex. 4) ou um dado (ex. um dataframe) em um objeto. Você pode usar o nome do objeto para acessar seu valor. Vimos como construir objetos com um valor único. Objetos com valor único são chamados de objetos atômicos.
+```{r}
+# A double
+my_numeric <- 45.2
+
+# An integer
+my_integer <- 4L
+
+# A character
+my_character <- 'some text'
+
+# A logical
+my_logical <- FALSE
+```
+
+### Vetores 
+
+A R também permite que você guarde uma coleção de objetos atômicos em um objeto. Uma coleção de objetos atômmicos são os vetores. Para criar um vetor você precisa utilizar o comando c() e colocar os valores do vetor separados por uma virgula. 
+
+```{r}
+# Um vetor double
+a_double_vector <- c(25, 32, 20)
+
+# Um vetor character
+a_character_vector <- c('a', 'b', 'c')
+
+## FAÇA VOCÊ: construa um vetor my_names, com cada nome do seu nome completo 
+
+
+```
+
+Os objetos de um vetor são sempre de uma mesma classe. Se você tentar misturar tipos de dados dentro de um vetor, o R utilizará a hierárquia de conversão para converter todos os elementos do vetor em apenas um tipo.
+
+```{r}
+my_vector <- c(25L, "32", 2.5, TRUE) # Um vetor caracter
+```
+
+Você pode utilizar vetores para fazer comparações e cálculos:
+```{r}
+vetor1 <- c(25, 32, 20)
+vetor2 <- c(2, 3, 4)
+
+# R subtrai 2 de cada elemento do vetor1
+vetor1 - 10
+
+# R calcula o log de cada elemento do vetor2
+log(vetor2)
+
+# R divide os valores do vetor1 pelos valores do vetor2 elemento a elemento
+resultado_divisao <- vetor1/vetor2
+
+# Você também pode fazer comparações lógicas com um vetor
+vetor1/4 == 5
+
+## FAÇA VOCÊ: Verifique quais objetos dentro do vetor1 são divisíveis por 2 (dica: use o operador %% e comparações lógicas)
+
+
+```
+
+Você pode acessar elementos de um vetor por sua posição utilizando o operador []
+```{r}
+my_vector <- c(25, 32, 20)
+
+# Acessando a segunda posição de my_vector
+my_vector[2]
+
+# Acessando a segunda e quarta posição de my_vector
+my_vector[c(2,4)]
+
+# Acessando a última posição de my_vector
+n_elemts <- length(my_vector) # retorna o número de elementos
+my_vector[n_elemts]
+
+# R retorna NA
+my_vector[10]
+
+## FAÇA VOCÊ: Utilizando o vetor my_name com seu nome completo, acesse o seu último nome.
+
+
+```
+
+
+### Matrizes 
+
+O R tem a estrutura de matrizes. Um matriz é um vetor com duas dimensões. Para criar uma matriz você precisa utilizar a função matrix(). O primeiro argumento da função são os elementos que irão preencher a matriz, em seguida, o número de colunas e linhas da matriz. 
+
+```{r}
+# Uma matriz de double
+a_double_matrix <- matrix(c(25, 32, 20, 30), ncol = 2, nrow = 2)
+
+# Uma matriz de lógicos
+a_logical_vector <- c(T, F, F, F)
+a_logical_matrix <- matrix(a_logical_vector, ncol = 2, nrow = 2)
+
+## FACA VOCÊ: Construa uma matriz (2x2) two_names com seu nome e sobrenome e o nome e sobrenome da pessoa que está ao seu lado. A primeira linha tem que conter seu nome e sobrenome e a segunda linha precia conter o nome e sobrenome da outra pessoa.
+
+
+```
+
+Os objetos de uma matriz são sempre de uma mesma classe. Se você tentar misturar tipos de dados dentro de uma matriz, o R utilizará a hierárquia de conversão para converter todos os elementos do vetor em apenas um tipo.
+
+```{r}
+my_matrix<- matrix(c(25, 32, F, 2L), ncol = 2, nrow = 2) # Uma matriz double
+```
+
+Você pode utilizar matrizes para fazer comparações e cálculos:
+```{r}
+matrix1 <- matrix(c(25, 32, 20, 14), ncol = 2, nrow = 2)
+matrix2 <- matrix(1:4, ncol = 2, nrow = 2)
+
+# R subtrai 2 de cada elemento do matrix1 
+matrix1 - 2
+
+# R calcula o log de cada elemento do matrix2 
+log(matrix2)
+
+# R multiplica os valores da matrix1 pelos valores da matrix2 elemento a elemento
+resultado_mult <- matrix1*matrix2 
+```
+
+A seguir algumas funções úteis para manipulação de matrizes no R:
+```{r}
+# Calcula número de linhas e colunas da matrix1
+dim(matrix1)
+
+# Calcula transposta da matrix1
+t(matrix1)
+
+# Calcula a inversa da matrix1
+solve(matrix1)
+
+# Multiplicação matricial entre matrix1 e matrix2
+mult_matricial <- matrix1%*%matrix2 
+
+# Você pode concatenar matrizes pelas colunas ou empilhar matrizes
+rbind(matrix1, matrix2)
+cbind(matrix1, matrix2)
+
+## FAÇA VOCÊ: Utilize os vetores a seguir para construir uma matriz X com 2 colunas e 5 linhas e uma matriz Y com 1 coluna e 5 linhas. Em seguida utiliza a fórmula (X_trasposto*X)-1*X_transposto*Y para calcular os coeficientes de regressão. 
+x0 <- c(1, 1, 1, 1, 1); x0 <- rep(1, 5)
+x1 <- c(0.07, 0.76, 0.82, -1.86, -0.82)
+y <- c(0.30, 1.78, 2.77, -3.27, -1.54)
+```
+
+Você pode acessar elementos de uma matriz por sua posição utilizando o operador []
+```{r}
+my_matrix <- matrix(c(25, 32, 20, 14), ncol = 2, nrow = 2)
+
+my_matrix[2 , ] # Seleciona segunda linha
+my_matrix[ , 1] # Seleciona primeira coluna
+my_matrix[ , -1] # Remove primeira coluna
+my_matrix[2 , 1] # Seleciona segundo elemento da primeira coluna
+
+# R retorna erro de subscript out of bounds
+my_matrix[2, 10]
+
+## FAÇA VOCÊ: Utilize a matriz two_names para acessar o primeiro nome da pessoa do seu lado.
+
+```
+
+### Fatores
+
+No R, os fatores se comportam como vetores de inteiros que possuem rótulos/labels e são úteis para representar uma variável categórica nominal ou ordinal. Você pode criar um fator utilizando a função factor(). Quando você cria um fator através de um vetor, os elementos do seu vetor serão transformados em inteiros (levels) e cada valor inteiro terá um rótulo (label).
+
+```{r}
+sexo <- c("F", "M", "F", "M", "F", "F", "M") # Um vetor
+my_factor <- factor(sexo)
+
+levels(my_factor) # Retorna os rótulos do fator
+table(my_factor) # Retorna tabela de frequência da categoria
+```
+
+Você pode utilizar a função factor para setar quais os rótulos você quer na hora de transformar o vetor em um fator.
+```{r}
+sexo <- c(2, 1, 2, 1, 2, 2, 1) # Um vetor
+my_factor <- factor(sexo, levels = c(1, 2), labels = c("Masculino", "Feminino"))
+
+## FACA VOCÊ: Utilize o vetor raca para criar um factor my_factor_race em que 1 - Branco, 2 - Pardo/Negro e 3 significa outro. Em seguida construa uma tabela de frequência desses resultados.
+raca <- c(1, 2, 1, 2 , 1 , 1, 2, 2, 3, 2, 3, 3, 3, 2, 1, 2, 3)
+
+```
+
+### Listas 
+
+Listas são um tipo especial de objeto que aceitam QUALQUER TIPO de objeto e estrutura de dados. Os resultados de modelos estatísticos, gráficos feitos com ggplot2 e algoritmos de aprendizado de máquina são uma lista no R.
+```{r}
+# Uma lista 
+my_list <- list(1:5, "Z", TRUE, c("a", "b"))
+```
+
+Você pode acessar elementos de uma lista por sua posição através dos operadores [] ou $:
+
+```{r}
+my_order <- list(
+pedido_id = 8001406,	
+    	pedido_registro = as.Date("2017-05-25"),
+    	nome = "Gabriela",
+ 	lista_compras = c('cebola', 'alho', 'feijao', 'ovo'),
+	valor = 52.25 
+) 
+
+my_order$pedido_registro # elemento chamado lista_compras
+my_order[1] # nova lista com o primeiro elemento
+my_order[[1]] # seleciona o primeiro elemento
+my_order['nome'] # nova lista com o elemento chamado nome
+
+## FACA VOCÊ: Acesse o elemento lista_de_compras da lista my_order
+
+
+## FAÇA VOCÊ: Acesse o último elemento da lista de compras que está dentro da lista my_oder.
+
+```
+
+
+### Dataframes
+
+Um data.frame é o mesmo que uma tabela spreadsheet do Excel ou um tabela SQL. No R, os data.frame’s são um tipo de lista especial em que todos os elementos têm o mesmo comprimento. Por serem um tipo de lista, colunas podem ser de classes diferentes.
+```{r}
+# Criando um dataframe através de vetores com duas colunas e três obs
+my_df <- data.frame(x = c(1, 2, 3), y = c("a", "b", "c"))
+
+# Criando um dataframe através de uma lista
+my_list <- list(x = c(1, 2, 3), y = c("a", "b", "c"))
+as.data.frame(my_list)
+
+# Criando um dataframe através de uma matriz
+my_matrix <- matrix(c(25, 32, F, 2L), ncol = 2, nrow = 2)
+as.data.frame(my_matrix)
+
+## Faça você: Utilize os vetores x0, x1 e y para construir um dataframe my_df
+
+## Faça você: Transforme o a matrix two_names em um dataframe my_df2
+
+## Faça você: Transforme as matrizes X e Y em um único dataframe my_df3
+```
+
+Você pode acessar elementos de um dataframe por sua posição através dos operadores [] ou $:
+```{r}
+my_df <- data.frame(
+  produto_id = c(025, 132, 145, 235),
+ 	produto_nome = c('cebola', 'alho', 'feijao', 'ovo'),
+	produto_valor = c(0.75, 2, 8, 10),
+	produto_qtd = c(35, 0, 22, 19)
+) 
+
+my_df$produto_valor # coluna chamada produto_valor
+my_df[ , 1] # primeira coluna do dataframe
+my_df[ , -1] # remove primeira coluna do dataframe
+my_df[2 , ] # segunda observação do dataframe
+my_df[3 , 'produto_nome'] # valor da coluna produto_nome pra 3ª obs do df
+my_df$produto_nome[3] # valor da coluna produto_nome pra 3ª obs do df
+
+# FAÇA VOCÊ: Acesse os dois últimos valores da variável produto_valor no dataframe my_df
+
+```
+
+## Controle de fluxo
+
+O **if** e **else** utiliza uma comparação lógica para decidir quais trechos de códigos serão executados. O R só vai executar o que está dentro das chaves **{}**.
+
+```{r}
+x <- 2
+
+if (x == 1){
+	print("Objeto x é 1")
+} else { 
+  # Conjunto de códigos que serão executados
+  print("Objeto x não é 1")
+}
+```
+
+Você pode aumentar o número de comparações utilizando **else if()**:
+```{r}
+x <- 2
+
+if (x == 1){
+	print("Objeto x é 1")
+} else if(x == -1){
+  print("Objeto x é -1")
+} else { 
+  # Conjunto de códigos que serão executados
+  print("Objeto x não é 1e nem -1")
+}
+```
+
+É importante notar que o if do R só funciona para uma comparação q resulta em um objeto atômico de tipo lógico. Se você utilizar um vetor de lógicos para fazer uma comparação o R vai utilizar apenas a primeira posição do vetor e vai ignorar o restante.
+```{r}
+x <- c(2, 1, -1, 1, -1, 1, -1, -1)
+
+if (x == 1){
+	print("Objeto x é 1")
+} else if(x == -1){
+  print("Objeto x é -1")
+} else { 
+  # Conjunto de códigos que serão executados
+  print("Objeto x não é 1 e nem -1")
+}
+```
+
+O **for** repete conjuntos de códigos para o comprimento do objeto indicado entre parênteses. 
+```{r}
+my_vector <- 1:10
+length(my_vector) ## Calcula tamanho do vetor
+
+for (i in my_vector) {
+	print("Hello World") # Printa o Hello World 10 vezes
+}
+```
+
+O **for** do R guarda no iterador (no caso o i) o valor da iteração do iterado. Veja q no código a baixo o valor de i na primeira iteração é i=1, na segunda i=2 e assim por diante.
+```{r}
+for (i in 1:10) {
+	print(i) # Printa os elementos de i
+}
+```
+
+Você pode utilizar os valores do iterador para iterar sobre variáveis de uma base de dados, colunas de uma matriz e assim por diante, ...
+```{r}
+my_df <- mtcars # Base de dados
+
+# Calculando a média de todas as variáveis de mtcars
+for (variavel in my_df) {
+	mean_var <- mean(variavel)  
+	print(mean_var) # Printa a média da variável
+}
+```
+
+Veja a seguir que podemos utilizar o valor do iterado para acessar variáveis de uma base de dados através do operador []. O mesmo não vale utilizando o operador $.
+```{r}
+nome_variaveis <- names(my_df)
+
+# Calculando a média das variáveis e printando seus nomes
+for (name_variavel in nome_variaveis) {
+	mean_var <- mean(my_df[ , name_variavel ])  
+	print(c(name_variavel, mean_var)) 
+}
+
+## FACA VOcÊ:: Construa um for que itera sobre as variáves de my_df utilizando o número da coluna, não o nome. Em seguida cálcule o desvio padrão de cada coluna e print o número da coluna e o valor do desvio padrão.
+
+n_colunas <- 
+```
+
+
+## Funções
+
+Funções são um conjunto de códigos escritos para executar uma tarefa. Funções podem ou não aceitar argumentos/parâmetros Geralmente, se utiliza funções quando você quer executar um conjunto de código várias vezes. Você pode ver a estrutura e especificação de uma função apenas rorando o comando "nome_da_funcao" sem parentêses no final.
+```{r}
+# Veja estrutura da função que calcula correlação
+cor
+```
+
+Os argumentos de uma função podem ser setados através do nome do argumento ou da ordem em que ele foi especificado na criação da função.
+
+```{r}
+#Utilizando o nome dos argumentos
+cor(x = mtcars, method = "kendall")
+
+#Utilizando a ordem dos argumentos:
+cor(mtcars, NULL, "everything", "kendall")
+
+## FAÇA VOCÊ: Calcule a correlação entre o vetor x1 e vetor y construídos na seção de matrizes.
+
+
+```
+
+As funções podem ter argumentos obrigatórios e argumentos opcionais (argumentos com valores default). Os argumentos que, na especificação da função, não são inicializados com um valor são os argumentos obrigatórios. Os argumentos inicializados com um valor são argumentos opcionais.
+```{r}
+cor(mtcars, use = "complete.obs")
+
+## FAÇA VOCÊ: Calcule a correlação de spearman entre o vetor x1 e vetor y construídos na seção de matrizes.
+
+```
+
+Use a função help para entender o funcionamento de cada argumento.
+```{r}
+help(cor)
+```
+
+Para ver quais funções existem em um pacote você pode utilizar a função help(nome_do_pacote)ou escrever o comando nome_do_pacote:: e apertar a tecla <tab> no Rstudio.
+```{r}
+help(stats)
+stats
+```
+
+Os pacotes no R podem ser instalados através do comando install.packages(nome_do_pacote) ou utilizando a interface gráfica do Rstudio para instalação. Para utilizar funções de um pacote nos seus scripts é preciso ‘chamar’ os pacotes através da função library(nome_do_pacote).
+
+```{r}
+install.packages("dplyr")
+library("dplyr")
+
+## FAÇA VOCÊ: Instale os pacotes tidyr e readr e faça library deles
+```
+	
+Você pode criar suas próprias funções (UDF). Uma vez criadas, você utiliza as funções da mesma maneira que você utilizaria uma função built-in.
+
+```{r}
+my_function <- function (a){
+	for (i in 1:a){
+		b <- i^2
+		print(b)
+	}
+}
+
+resul <- my_function(10) # executa função c prints dentro do for
+resul # printa NULL
+```
+
+É extramemente importante prestar atençao no valor de retorno da função. Geralmente, o valor de retorno de uma função é a última expressão no corpo da função que será executada ou pode ser especificada através do operador return().
+
+```{r}
+my_function_1 <- function (a){
+	for (i in 1:a){
+		b <- i^2
+		print(b)
+	}
+	b #Última expressão executada e valor de retorno
+}
+resul <- my_function_1(10)
+
+my_function <- function (a){
+	for (i in 1:a){
+		b <- i^2
+		print(b)
+	}
+	return(b) # Valor de retorno
+  sqrt(b) # Última expressão a ser executada
+}
+resul <- my_function_2(10)
+```
+
+Você pode criar uma função para fazer praticamente tudo que você quiser. Veja baixo uma função que recebe o valor de um número e calcula a raiz quadrada de todos os números de 1 até o argumento e retorna um vetor com esses resultados.
+```{r}
+my_function <- function (a){
+	out <- numeric(0) # Inicializa vetor
+	for (i in 1:a){
+		b <- i^2
+		out <- c(out, b)
+		print(b)
+	}
+	return(out)
+}
+
+resul <- my_function(10) # executa função c prints dentro do for
+resul # printa um vetor com os resultados dos calculos do for
+```
+
+### Alguns exercicios
+```{r}
+## FAÇA VOCÊ: Construa uma função que recebe um dataframe e calcula a média de todas as variáveis do dataframe, em seguida retorne um vetor com o valor das médias para cada variável. Teste a funçao da base de dados mtcars.
+
+
+
+## FAÇA VOCÊ: Construa uma função que recebe um dataframe e calcula a média de todas as variáveis do dataframe, em seguida retorne um dataframe com uma coluna com o valor das médias para cada variável. Teste a funçao da base de dados mtcars.
+
+
+
+## FAÇA VOCÊ: Construa uma função que recebe um dataframe e calcula a média de todas as variáveis do dataframe, em seguida retorne um outro dataframe com duas colunas, uma com o nome da variável e a outra com o valor das médias para cada variável. Teste a funçao da base de dados mtcars.
+
+
+```
+
+## Fórmulas
+
+As fórmulas representam associações entre objetos no R. Em geral são utilizadas no contexto de modelagem estatística. Em modelagem estatística, são as fórmulas que descrevem a relação entre uma variável resposta e variáveis explicativas e suas interações.
+
+```{r}
+my_df <- mtcars
+my_formula <- am ~ vs # am é var resposta e vs é variável explicativa
+
+# Calcula regressão linear
+my_linear_mod <- lm(my_formula, data = my_df) 
+typeof(my_linear_mod)
+
+## Você pode utilizar a função summary no objeto do modelo para ver os resultados gerais da regressão
+my_linear_mod
+summary(my_linear_mod)
+
+## FAÇA VOCÊ: Utilize a lista resultante do modelo para acessar o valor de beta1 do modelo.
+
+```
+
+Alguns tipos específicos de testes estatísticos podem receber fórmulas como argumentos. Um exemplo é o teste T de comparação de médias. 
+```{r}
+# Calcula teste T
+my_ttest <- t.test(my_formula, data = my_df) 
+typeof(my_linear_mod)
+
+## FAÇA VOCÊ: Utilize a lista resultante do teste para acessar o valor do p_valor do teste
+
+```
+
+Suas fórmulas podem ser flexíveis, adicionar iterações, adicionar efeitos fixos, polinômios, adicionar todas as variáveis. 
+```{r}
+# am é var resposta e vs é variável explicativa
+my_formula <- am ~ vs 
+
+# am é explicada por vs, wt e interação entre vs e wt
+my_formula2 <- am ~ vs * wt 
+
+# am é explicada por vs, wt e interação entre vs e wt
+my_formula3 <- am ~ vs + wt + I(wt^2)
+```
+
+### Alguns exercicios
+
+```{r}
+## FAÇA VOCÊ: Utilize a função shapiro.test() para calcular o teste de adequação de normalidade para a variável am do data frame mtcars. Em seguida, utilize a lista resultante para extrair o p-valor do teste.
+
+
+# FAÇA VOCÊ: Construa uma função que recebe um dataframe e calcula p valor do teste de shapiro para todas as variáveis do dataframe, em seguida retorne um vetor com o valor dos p-valores para cada variável. Teste a funçao da base de dados mtcars.
+
+
+## FAÇA VOCÊ: Construa uma função que recebe um dataframe e calcula p valor do teste de shapiro para todas as variáveis do dataframe, em seguida retorne um dataframe de uma coluna com o valor dos p-valores para cada variável.Teste a funçao da base de dados mtcars.
+
+
+## FAÇA VOCÊ: Construa uma função que recebe um dataframe e calcula p valor do teste de shapiro para todas as variáveis do dataframe, em seguida retorne um dataframe com duas colunas uma com o valor dos p-valores para cada variável e outra com o nome de cada variável. Teste a funçao da base de dados mtcars.
+
+
+```
+

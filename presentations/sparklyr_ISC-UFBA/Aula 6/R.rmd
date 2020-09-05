@@ -1,0 +1,87 @@
+---
+title: "ml"
+author: "juracy.bertoldo"
+date: "13/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## Ler pacotes e base de dados
+```{r cars, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(caret)
+#instalar pacotes svmLinear3/kknn
+setwd("/home/juracy/curso_ml/")
+iris = read.csv(file = "iris.csv")
+```
+
+## descritiva básica
+```{r desc}
+summary(iris)
+table(iris$species)
+cor(iris[, 1:4])
+```
+Dividir os dados em treino e teste
+```{r separar_dados}
+
+index <- createDataPartition(iris$species, p=0.75, list=FALSE,times = 1)
+
+iris.treino <- iris[index,]
+table(iris.treino$species)
+iris.teste <- iris[-index,]
+table(iris.teste$species)
+
+#ver modelos do caret
+#names(getModelInfo())
+```
+```{r modelos}
+##configuração para todos os modelos
+config_model = trainControl(method = "cv",number = 10)
+
+#knn
+modelo_knn = train(species~.,data = iris.treino,method = "kknn",trControl = config_model)
+modelo_knn
+plot(modelo_knn)
+```
+
+## knn teste em dados novos
+```{r avaliacao}
+iris.teste_atributos = iris.teste[,1:4]
+predictions_knn<-predict(object = modelo_knn,iris.teste_atributos)
+table(predictions_knn)
+confusionMatrix(predictions_knn,iris.teste[,5])
+```
+
+
+Executar o algoritmo SVM na mesma base de dados 
+```{r svm}
+modelo_svm = train(species~.,data = iris.treino,method = "svmLinear3",trControl = config_model)
+modelo_svm
+predictions_svm<-predict(object = modelo_svm,iris.teste_atributos)
+confusionMatrix(predictions_svm,iris.teste[,5])
+```
+
+Executar o algoritmo Randon Forest na mesma base de dados 
+```{r rf}
+modelo_rf = train(species~.,data = iris.treino,method = "ranger",trControl = config_model)
+modelo_rf
+predictions_rf<-predict(object = modelo_rf,iris.teste_atributos)
+confusionMatrix(predictions_rf,iris.teste[,5])
+```
+
+
+```{r xxx}
+resamps <- resamples(list(knn= modelo_knn ,
+                          rf = modelo_rf,
+                          SVM = modelo_svm))
+
+ss <- summary(resamps)
+ss
+
+

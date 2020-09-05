@@ -1,0 +1,261 @@
+---
+title: "aula_3_atv1"
+author: "Gabriela L. Borges"
+date: "10/23/2019"
+output: html_document
+---
+# Introdução ao R - Manipulação de dados
+
+Essa seção contém as atividades que serão utilizadas durante a aula 1 de introdução ao R.
+
+O objetivo é que o aluno seja capaz de:
+1. Importar banco de dados usando R base
+2. Importar banco de dados usando tidyverse
+3. Manipulação de dados com dplyr
+4. O operador pipe 
+5. Fazer agregações dos dados
+6. Utilizar o pacote esquisse para fazer gráficos
+7. Fazer merge de tabelas
+
+## Abrindo as bases de dados 
+
+Utilize o chunk de código abaixo para importar os pacotes que utilizaremos e abrir as bases de dados do SIM BA e de Brazil cities.
+```{r}
+library(readr)
+
+my_df <- read_csv("data/SIM/BA/extracao_sim2017_2019_10_13.csv")
+my_df_cities <- read_csv("data/BRAZIL_CITIES_poly.csv")
+```
+
+## Trabalhando com Tibbles
+
+Os tibbles são versões preguiçosas dos dataframes que mantém tudo que é bom dos data frames, remove tudo ruim e acrescenta novos métodos. Importar os dados usando as bibliotecas +readr+, +readxl+ e +haven+ já trazem os dados em formato tibble.
+```{r}
+## FAÇA VOCÊ: Verifique quais as classes das bases my_df e my_df_cities
+class(my_df)
+class(my_df_cities)
+my_df
+```
+
+Os processos de arrumação de dados são conhecidos como data tidying. Um dataframe é considerado tidy se:
+1. Cada linha representa uma observação
+2. Cada coluna representa uma variável
+Utilizaremos os pacotes dplyr e tidyr para fazer as etapas de data tidying.p
+
+```{r}
+## Já instalou os pacotes dplyr e tidyr? Já chamou os pacotes?
+library(dplyr)
+```
+
+90% do seu tempo gasto deixando seus dados em formato analítico são resolvidos com as funções	mutate(), select(), filter(), arrange(), groub_by(), summarise(). Os outros 10% vão ser gastos usando o pacote tidyr.
+
+A função filter() filtra linhas utilizando uma comparação lógica. Para fazer várias comparações use os operadores & e |.
+```{r}
+my_df$CID3dig <- substr(my_df$CAUSABAS, start = 1, stop = 3)
+
+glimpse(my_df)
+
+# R base
+query <- my_df$CID3dig == 'A15' 
+obitos_tb <- my_df[query, ] 
+
+
+# Dplyr
+obitos_tb <- filter(my_df, CID3dig == 'A15')
+
+## FAÇA VOCÊ: O que acontece se você tentar fazer o filtro usando a versão do R base sem referenciar o nome do banco antes de dizer a variável (my_df$CID3dig -- CID3dig)
+CID3dig == 'A15' 
+
+## FAÇA VOCÊ: Filtre o banco de dados my_df_cities para conter os dados referente aos municípios da BAHIA. Guarde o resultado no objeto my_df_cities_Ba
+my_df_cities_ba <- filter(my_df_cities, STATE == "BA")
+
+```
+
+
+Você pode usar o operador %in% para criar filtros em uma mesma variável com mais de um valor e os operadores & ou | unir comparações lógicas feitas com outras variáveis.
+```{r}
+# Usando operador %in%
+obitos_tb <- filter(my_df, CID3dig %in% c('A15', 'A16', 'A17', 'A18', 'A19'))
+
+# Usando operAdor & e |
+filter(my_df, CID3dig == 'A15', SEXO == "Feminino")
+```
+
+Você pode usar qualquer função que retorne lógicos para fazer filtros.
+
+```{r}
+library(stringr)
+
+obitos_tb <- filter(my_df, str_detect(CID3dig, 'A1'))
+```
+
+A função select() seleciona colunas. É possível utilizar nomes, índices e intervalos de variáveis para selecionar variáveis.
+
+```{r}
+# R base
+new_df <- my_df[c('RACACOR', 'ESTCIV')]
+
+# Dplyr
+new_df <- select(my_df, RACACOR, ESTCIV)
+```
+
+O dplyr contém funções que auxiliam a seleção de variáveis tais como start_with, ends_with e contais().
+```{r}
+# Selecionando as variáveis com nome inicializados em linha e numero da DO
+select(my_df, starts_with("linha"), NUMERODO)
+
+## FAÇA VOCÊ: Selecione do banco my_df_cities_Ba as colunas referentes aos dados do IBGE, e a coluna com o nome da cidade. Guarde o resultado em df_cities_Ba
+df_cities_ba <- select(my_df_cities_ba, starts_with("IBGE"), CITY) 
+
+```
+
+A função arrange() ordena as linhas. A função desc pode ser utilizada para gerar uma ordem decrescente.
+
+```{r}
+# R Base
+ordem <- order(my_df$IDADEanos)
+new_df <- my_df[ordem, ]
+
+# Dplyr
+my_df <- arrange(my_df, desc(IDADEanos))
+
+## FAÇA VOCÊ: Ordene o banco de dados de cidades pela variável referente ao número de pessoas daquela cidade de acordo com o CENSO de 2010. Guarde o resultado no objeto my_df_cities_Ba e abre a base usando o auxiliador do enviroment para ver as cidades mais populosas da Bahia.
+arrange(my_df_cities_ba, desc(IBGE_RES_POP))
+
+```
+
+A função mutate() cria ou altera colunas. Novas variáveis precisam ter o mesmo número de linhas da base original.
+```{r}
+# R base
+my_df$CID3dig <- substr(my_df$CAUSABAS, start = 1, stop = 3)
+
+# Dplyr
+my_df <- mutate(my_df, CID3dig = substr(CAUSABAS, start = 1, stop = 3))
+
+## FAÇA VOCÊ: Crie uma variável em my_df_cities_Ba com o percentual de pessoas que vivem na área urbana. IBGE_RES_POP - numero de pessoa q moram na cidade e IBGE_POP - numero de pessoas q moram na area urbana
+my_df_cities_ba <- mutate(my_df_cities_ba,
+  percent_urb = IBGE_POP/IBGE_RES_POP*100,
+  percent_urb = round(percent_urb, 4)
+                          )
+colnames(my_df_cities_ba)
+```
+
+Dentro de uma mesma função de mutate() você pode criar/alterar múltiplas colunas. Você pode usar colunas recém criadas para construir outras colunas.
+```{r}
+my_df <- mutate(my_df, 
+      ind_menor15anos = IDADEanos <= 15,
+      ind_tuberculosis = str_detect(CID3dig, 'A1'),
+      tub_menor15 = ind_menor15anos == T & ind_tuberculosis == T
+    )
+```
+
+A função summarise() sumariza os dados. Aplica uma função qualquer às variáveis e retorna um vetor de tamanho 1.
+```{r}
+# R Base - Fica pros curiosos
+
+my_df1 <- filter(my_df, SEXO == "Feminino")
+summarise(my_df1, 
+      n_obs = n(),
+      qtd_mun = n_distinct(CODMUNRES),
+      idade_media = mean(IDADEanos, na.rm = T)
+    )
+
+# Dplyr
+new_df <- mutate(my_df, idadeAux = ifelse(SEXO == "Feminino", IDADEanos, NA))
+
+new_df <- summarise(new_df, 
+      n_obs = n(),
+      qtd_mun = n_distinct(CODMUNRES),
+      idade_media_mulheres = mean(idadeAux, na.rm = T)
+    )
+write_csv(new_df, "")
+
+## FAÇA VOCÊ: Porque o calculo da média de Idade retornou NA? Faça um filtro em my_df para verificar se existe algum NA na variável IDADEanos (Dica = Utilize a função is.na). Em seguida olhe o help da função mean e encontre o argumento da função para ignorar os NA's na hora do cálculo.
+
+
+## FAÇA VOCÊ: Utilize a função summarise para contar quantas pessoas no total tem na Bahia de acordo com o Censo de 2010. 
+
+```
+
+## O operador pipe
+
+O pipe usa o valor resultante da expressão do lado esquerdo como primeiro argumento da função do lado direito. O operador pipe é uma função do pacote magrittr. Aperte as teclas <ctrl> + <shift> + <M> como shortcut para construir o pipe.
+
+```{r}
+# Mundo sem pipe
+x <- c(1, 2, 3, 4)
+sqrt(sum(x))
+
+# Mundo com pipe
+x <- c(1, 2, 3, 4)
+x %>% sum() %>% sqrt()
+```
+
+O pipe pode ser utilizado em conjunto com o pacote dplyr para construir pipelines de manipulação de dados.
+
+```{r}
+# Mundo sem pipe
+my_df <- mutate(my_df, CID3dig = substr(CAUSABAS, start = 1, end = 3))
+
+obitos_tb <- filter(my_df, CID3dig == 'A15')
+
+new_df <- select(obitos_tb, RACA, ESTCIV, IDADEanos)
+
+new_df <- arrange(new_df , desc(IDADEanos))
+
+# Mundo com pipe
+obitos_tb <- my_df %>% 
+    mutate(CID3dig = substr(CAUSABAS, start = 1, stop = 3)) %>%
+    filter(CID3dig == 'A15') %>%
+    select(RACACOR, ESTCIV, IDADEanos) %>%
+    arrange(desc(IDADEanos))
+
+## FAÇA VOCÊ: Construa um pipeline usando o pipe para refazer o seu banco de dados my_df_cities_Ba. Você primeiro filtrou os municípios do estado da Bahia, selecionou as colunas com os dados do IBGE e o nome da cidade, ordenou pela população da Bahia, criou uma coluna com o percentual de pessoas que vivem na área urbana.
+
+df_cities_ba <- my_df_cities %>% 
+  filter(STATE == 'BA') %>% 
+  select(CITY, starts_with("IBGE")) %>% 
+  arrange(desc(IBGE_RES_POP)) %>% 
+  mutate(percentual_urb = 100*IBGE_POP/IBGE_RES_POP)
+
+df_cities_ba %>% glimpse()
+
+```
+
+## De volta a manipulação de tibbles
+
+A função group_by() agrupa os dados. O group_by recebe um tibble e transforma ele em um tbl agrupado (não altera seu número de linhas ou colunas)
+```{r}
+# Sem o pipe
+group_by(my_df, CODMUNRES)
+
+# Com o pipe
+my_df %>% group_by(CODMUNRES)
+
+# Veja que o número de linha do tibble resultante não é alterado com apenas o group_by()
+my_df %>% group_by(CODMUNRES) %>% nrow()
+```
+
+As operações feitas no tibble após um group_by() serão feitos por grupo. A função group_by é geralmente utilizada junto com a função summarise() ou mutate(). Summarise após um group_by() reduz o tamanho da base original para o número de valores distintos da variável de agrupamento.
+
+```{r}
+obitos_agregados <- my_df %>%
+    group_by(CODMUNRES) %>% # Cálculos a partir daqui serão feitos por obs no msm mun
+    summarise(
+      n_obitos = n(),
+      n_obitos_tb = sum(ind_tuberculosis == T)
+    ) # Utilize a função summarise para reduzir a dimensionalidade da base de dados
+
+## FAÇA VOCÊ: Agrupe os dados de my_df_cities pela variável STATE, em seguida summarise o resultado para retornar o número de pessoas TOTAL em cada estado (IBGE_RES_POP) e o número de pessoas da Área urbana em cada estado (IBGE_POP).
+tbl_group <- my_df_cities %>% 
+  group_by(STATE) %>% 
+  summarise(
+    num_pessoas_total = sum(IBGE_RES_POP, na.rm = T),
+    num_pessoas_urbana = sum(IBGE_POP, na.rm = T)
+  ) %>% 
+  mutate(prop = num_pessoas_urbana/num_pessoas_total)
+write_csv(tbl_group, "data/obitos-estados.csv")
+
+```
+
+Mutate após um group_by() mantém a base do tamanho original mas faz os cálculos levando em consideração a variável de agrupamento.
