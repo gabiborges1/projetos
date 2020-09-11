@@ -20,11 +20,4 @@ aeroportos_atuais <- df %>%
 df_atuais <- df %>% 
   filter(str_detect(nome_aeroporto, pattern = str_c(aeroportos_atuais, collapse = "|")))
 
-df_plot <- df_atuais %>% 
-  group_by(data) %>% 
-  summarise_if(is.numeric, sum)
-
-df_plot %>% 
-  ggplot(aes(x = data, y = emb_desemb_no_mes)) + geom_line()
-
-glimpse(df_plot)
+  

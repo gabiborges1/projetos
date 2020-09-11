@@ -1,9 +1,8 @@
 
-#* Input: 
-#* df 
-#* 
-#*  
-#*    
+#* Input
+#* df - um data.frame
+#* Output
+#* df_resul - um data.frame com o nome das variáveis padronizados e strings em minúsculo
 clear_strings <- function(df){
   df %>% 
     clean_names() %>% 
@@ -65,4 +64,13 @@ create_month_data <- function(file, sheets =  c("Aeronaves", "Passageiros", "Cor
   df_binded <- bind_cols(list_df, .name_repair = "minimal")
   message("Base ", file, ": Criada com sucesso")
   subset(df_binded, select = which(! duplicated(names(df_binded))))
+}
+
+geodesica2dec <- function(string){
+  string %>%
+    sub('°', 'd', .) %>%
+    sub("'", '\'', .) %>%
+    sub("''", '" ', .) %>%
+    char2dms %>%
+    as.numeric
 }
