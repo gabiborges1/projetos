@@ -1,23 +1,26 @@
 library(lubridate)
   
-df <- df_infraero %>% 
-  mutate(
-    ano = str_extract(file_name, pattern = "\\d+"),
-    mes = str_extract(file_name, pattern = "(?<=_)(.*?)(?=\\.)")     
-    ) %>% 
-  filter(nome_aeroporto != "infraero", tipo_transporte != "total", tipo_voo != "total") %>% 
-  select(-file_name) %>% 
-  mutate(
-    data_joined = str_c(ano, mes, "01", sep = "-"),
-    data = ymd(data_joined)
-    ) 
+df_plot <- df_atuais %>% 
+  group_by(data) %>% 
+  summarise_if(is.numeric, sum) 
 
-aeroportos_atuais <- df %>% 
-  filter(ano == '2020', mes == "Jul") %>% 
-  distinct(nome_aeroporto) %>% 
-  pull(nome_aeroporto)
+df_train <- df_plot %>% 
+  filter(year(data) < 2020) %>% 
+  mutate(ts = ts(emb_desemb_no_mes, frequency = 12, start = c(2012, 1)))
 
-df_atuais <- df %>% 
-  filter(str_detect(nome_aeroporto, pattern = str_c(aeroportos_atuais, collapse = "|")))
+ma <- sma(df_train$ts, h=12, silent=TRUE)
+predict <- timetk::tk_tbl(ma$forecast) %>% 
+  bind_rows(timetk::tk_tbl(ma$fitted)) %>% 
+  mutate(data = as.Date(as.POSIXct(index)))
 
-  
+data <- predict %>% 
+  mutate(forecast = value) %>% 
+  select(data, forecast) %>% 
+  full_join(df_plot)
+
+data %>% 
+  filter(year(data) >= 2018) %>% 
+ggplot(aes(x = data)) +
+  geom_line(aes(y = forecast)) +
+  geom_point(aes(y = forecast)) +
+  geom_line(aes(y = emb_desemb_no_mes )) 

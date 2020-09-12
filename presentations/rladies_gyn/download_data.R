@@ -1,7 +1,7 @@
 library(httr)
 library(xml2)
 library(rvest)
-library(stringr)
+library(tidyverse)
 
 url_base <- "https://transparencia.infraero.gov.br/"
 url <- str_c(url_base, "estatisticas/")

@@ -9,11 +9,34 @@ clear_strings <- function(df){
     mutate_if(is.character, stringr::str_to_lower)
 }
 
+#* Input 
+#* df - um data.frame
+#* cut_point - um double entre 0 e 1 indicando o percentual de preenchimento necessário para se manter uma variável
+#* Output
+#* df_resul - um data.frame com variáveis com no mínimo cut_point de preenchimento
+select_without_nas <-function(df, cut_point = 0.9){
+  variables_to_stay <- df %>% 
+    summarise_all(~ sum(is.na(.))/nrow(df)*100) %>% 
+    pivot_longer(
+      cols =  everything(),
+      names_to = "nm_variavel",
+      values_to = "vl_percentual_na"
+    ) %>% 
+    filter(vl_percentual_na <= !!cut_point) %>% 
+    pull(nm_variavel)
+  
+  df_resul <- df %>% 
+    select(!!variables_to_stay)
+  
+  return(df_resul)
+}
+
 read_infraero <- function(file, sheet){
   df <- read_excel(file, sheet = sheet, skip = 4, col_types = "text") 
   
   df <- df %>% 
     clear_strings() %>% 
+    select_without_nas() %>% 
     drop_na()
   
   id_aeroportos <- seq(1, nrow(df), by = 7)  
