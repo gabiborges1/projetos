@@ -18,7 +18,9 @@ Utilizamos o modelo de série temporal que leva em consideração o erro, tend�
 Os scripts das análises para pergunta 1 estão disponíveis na pasta **analysis/**. O script **pergunta1.R** foi construído durante o curso. O script **pergunta1_generalizacao.R** generaliza as análises para que elas sejam rodadas para todas as métricas da base de dados.
 
 **GRÁFICO**: Redução da movimentação nos aeroportos administrados pela infraero durante crise do covid19, Janeiro de 2012 a Julho de 2020.
-![plot1](Rplot.png)
+<p align="center" width="100%">
+    <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/rladies_gyn/analysis/pergunta1.png"> 
+</p>
 
 Algumas conclusões:
 1. Houve uma redução de **96%** na movimentação de pessoas, **71%** de redução do número total de voos e **35%** de redução nas cargas do correios.

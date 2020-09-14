@@ -122,7 +122,7 @@ list_plots <- map(
 )
 
 # Juntando todos os gráficos
-ggarrange(plotlist = list_plots, ncol = 3, common.legend = TRUE, legend="top")               
+ggarrange(plotlist = list_plots, ncol = 1, common.legend = TRUE, legend="top")               
                
 
                
