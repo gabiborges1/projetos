@@ -97,3 +97,5 @@ geodesica2dec <- function(string){
     char2dms %>%
     as.numeric
 }
+
+
