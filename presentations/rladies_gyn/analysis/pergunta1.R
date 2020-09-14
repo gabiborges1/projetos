@@ -103,8 +103,8 @@ source("analysis/pergunta1_generalizacao.R")
 # Criando data.frame com o nome das variáveis a serem plotadas
 nome_vars <- tibble(
   nome = c("emb_desemb_no_mes", "pou_dec_no_mes",  "car_descar_no_mes"),
-  subtitle = c("Voos", "Passageiros", "Cargas do Correios"),
-  label_eixoy = c("Pousos + Decolagens", "Embarcados + Desembarcados", "Carregadas + Descarregadas")
+  subtitle = c("Passageiros", "Voos", "Cargas do Correios"),
+  label_eixoy = c( "Embarcados + Desembarcados","Pousos + Decolagens", "Carregadas + Descarregadas")
                     )
 # Rodando script de predição e de plotagem dos gráficos para as variáveis em nome_vars
 list_plots <- map(
@@ -122,7 +122,7 @@ list_plots <- map(
 )
 
 # Juntando todos os gráficos
-ggarrange(plotlist = list_plots, ncol = 1, common.legend = TRUE, legend="top")               
+ggarrange(plotlist = list_plots, ncol = 3, common.legend = TRUE, legend="top")               
                
 
                
