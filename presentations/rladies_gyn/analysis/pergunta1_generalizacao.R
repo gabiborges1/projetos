@@ -46,6 +46,7 @@ forecast_calculate <- function(df, var_name = "emb_desemb_no_mes") {
     slice_max(order_by = perc) %>% 
     mutate(
       pos_y = (all + before2020) / 2,
+      value_perc = perc,
       perc = str_c(perc, "% \n de redução")
     )
   
