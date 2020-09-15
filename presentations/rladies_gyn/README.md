@@ -54,3 +54,8 @@ Algumas conclusões:
 - Essa base é riquíssima e da pra fazer muitas análises. Se sinta livre para usar a base aqui disponível em suas aulas, apresentações, aplicativos shiny, tcc, dissertação, scripts para aprender, e o que vocês quiserem. Apenas peço que sejam citados o site oficial  da infraero e este repositório no momento do uso.
 - Construiu um projeto legal com essa base? Uma visualização? Me manda para eu ver pelo linkedIn ou por email ^.^
 
+# Onde aprender? 
+
+- [curso-R](https://www.curso-r.com/)
+- livros do Hadley Wickham ([Advanced R](https://adv-r.hadley.nz/), [ggplot2](https://ggplot2-book.org/))
+
