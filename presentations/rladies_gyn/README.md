@@ -41,4 +41,21 @@ Os scripts das análises para pergunta 2 estão disponíveis na pasta **analysis
 Algumas conclusões:
 1. **86%** dos aeroportos tiveram mais de **60%** de redução no número de passageiros frequentando o aeroporto durante a crise de covid.
 2. Os aeroportos que foram menos impactados do que outros são aeroportos pequenos com pouca movimentação de pessoas.
-3. Os aeroportos de Pampulha (BH) e Jacarépaguá (RJ) são os maiores aeroportos menos impactados pela crise do covid com redução de 39% e 54% na movimentação de pessoas, respectivamente.
+3. Os aeroportos de Pampulha (BH) e Jacarépaguá (RJ) são os maiores aeroportos menos impactados pela crise do covid com redução de **39%** e **54%** na movimentação de pessoas, respectivamente.
+
+# Limitações
+
+- É extremamente reforçar que os cálculos utilizados levam em consideração apenas os aeroportos administrados pela Infraero.
+- As características dos aeroportos não foram levadas em consideração. Então as métricas aqui calculadas não podem ser intepretadas como impacto do covid na movimentação dos aeroporotos. 
+- O modelo de predição só foi utilizado para fins de visualização da tendẽncia do comportamento. Para utilização do modelo em contexto de predição é necessário que se faça as etapas de machine learning (treino, teste, validação, padronização, ...)
+
+# E agora?
+
+- Essa base é riquíssima e da pra fazer muitas análises. Se sinta livre para usar a base aqui disponível em suas aulas, apresentações, aplicativos shiny, tcc, dissertação, scripts para aprender, e o que vocês quiserem. Apenas peço que sejam citados o site oficial  da infraero e este repositório no momento do uso.
+- Construiu um projeto legal com essa base? Uma visualização? Me manda para eu ver pelo linkedIn ou por email ^.^
+
+# Onde aprender? 
+
+- [curso-R](https://www.curso-r.com/)
+- livros do Hadley Wickham ([Advanced R](https://adv-r.hadley.nz/), [ggplot2](https://ggplot2-book.org/))
+
