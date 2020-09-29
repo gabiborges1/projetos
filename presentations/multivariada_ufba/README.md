@@ -64,3 +64,13 @@ Nessa etapa iremos rodar o modelo de discriminante linear para tentar discrimina
 <p align="center" width="100%">
     <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-19-1.png"> 
 </p>
+
+# E agora?
+
+- Essa base é riquíssima e da pra fazer muitas análises. Se sinta livre para usar a base aqui disponível em suas aulas, apresentações, aplicativos shiny, tcc, dissertação, scripts para aprender, e o que vocês quiserem. 
+- Construiu um projeto legal com essa base? Uma visualização? Me manda para eu ver pelo linkedIn ou por email ^.^
+
+# Onde aprender? 
+
+- [curso-R](https://www.curso-r.com/)
+- livros do Hadley Wickham ([Advanced R](https://adv-r.hadley.nz/), [ggplot2](https://ggplot2-book.org/))
