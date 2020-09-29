@@ -1,0 +1,333 @@
+---
+title: "Desemepenho Médio dos Municípios no ENEM"
+date: "`r Sys.Date()`"
+author: "Gabriela Borges"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+    code_folding: hide
+    keep_md: true
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+library(tidyverse)
+library(knitr)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=80)
+```
+
+
+# Sobre o banco de dados
+
+O banco de dados foi obtido no site do portal INEP. Baixei os microdados do ENEM referentes ao ano de 2016 e calculei as métricas de nota média das provas feitas para cada município [link](http://portal.inep.gov.br/web/guest/microdados) do estado da Bahia e de Pernambuco.
+Os dados originais contém informações sociodemográficas e de desempenho de cada uma das pessoas que fizeram a prova.
+
+CO_MUNICIPIO_RESIDENCIA - Codigo de município de residência
+- *uf_res* - Codigo de estado de residencia (26 - Pernambuco, 29 - Bahia)
+- *nu_nota_cn* - Nota média do município na prova de ciências naturais
+- *nu_nota_ch* - Nota média do município na prova de ciências humanas
+- *nu_nota_lc* - Nota média do município na prova de linguagens e códigos
+- *nu_nota_mt* - Nota média do município na prova de matemática
+- *nu_nota_redação* - Nota média do município na prova de redação
+
+```{r}
+df <- read_csv("data/base.csv")
+head(df) %>% 
+  kable()
+```
+
+# Perguntas
+
+As perguntas a serem respondidas eram:
+
+- Existem municípios com desempenhos parecidos na Bahia? (Análise de agrupamento)
+- Existe diferença no desempenho médio dos municípios da Bahia em relação ao municípios de Pernambuco? (Análise discriminante)
+
+# 1. Análise de agrupamento
+
+
+## Pacotes necessários
+
+```{r}
+library(ggplot2)
+library(factoextra)
+library(GGally)
+library(gridExtra)
+```
+
+## Descritiva
+
+Veja na figura abaixo que as variáveis de nota estão altamente correlacionadas, ou seja, os municípios tendem a ter desempenho semelhante em todas as materias.  Um indicador de que não existem municípios com desemepnho alto em matemática e péssimo em redação (por exemplo.). 
+
+Além disso, a característica da métrica ser uma média de uma variável contínua fez com que ela tivesse tendência de comportamento simétrico.
+```{r}
+df_bahia <- df %>% filter(uf_res == 29)
+ggpairs(df_bahia[,-c(1:3)],  aes(alpha=0.75), lower=list(continuous="smooth")) + theme_minimal()
+```
+
+## Agrupamento Hierárquico {.tabset}
+
+Os métodos hierárquicos da análise de cluster tem como principal característica um algoritmo capaz de fornecer mais de um tipo de partição dos dados. Ele gera vários agrupamentos possíveis, onde um cluster pode ser mesclado a outro em determinado passo do algoritmo.
+Esses métodos não exigem que já se tenha um número inicial de clusters e são considerados inflexíveis uma vez que não se pode trocar um elemento de grupo. Pra rodar o método é necessário setar uma métrica de distância e um critério de linkage.
+
+O metódo não hierárquico foi utilizado para identificarmos descritivamente o número de clusters necessários para agrupar os municípios da Bahia.
+
+### Single 
+
+O critério de linkage single agrupa os clusters de acordo com a *menor* distância entre todos os pares.
+
+```{r}
+library(NbClust)
+clust <- NbClust(data = df_bahia[,-c(1:3)], method= "single", index = "all")
+```
+
+```{r}
+fviz_nbclust(clust)
+```
+
+ 
+### Complete
+
+O critério de linkage complete agrupa os clusters de acordo com a *maior* distância entre todos os pares.
+
+```{r}
+clust <- NbClust(data = df_bahia[,-c(1:3)], method= "complete", index = "all")
+```
+
+```{r}
+fviz_nbclust(clust)
+```
+
+### Average
+O critério de linkage average agrupa os clusters de acordo com a *média* distância entre todos os pares.
+
+```{r}
+clust <- NbClust(data = df_bahia[,-c(1:3)], method= "average", index = "all")
+```
+
+```{r}
+fviz_nbclust(clust)
+```
+
+### Centroide
+O critério de linkage centroide agrupa os clusters de acordo com a distância média de todos os pares ao *centroide* do grupo.
+
+```{r}
+clust <- NbClust(data = df_bahia[,-c(1:3)], method= "centroid", index = "all")
+```
+
+```{r}
+fviz_nbclust(clust)
+```
+
+## 
+
+Os resultados dos algoritmos não hierárquicos corroboram para um número de cluster entre 2 a 4. Serão feitos testes com os métodos não hieráquicos utilizando esses número de clusters. O melhor cluster será escolhido com base na proporção de variabilidade entre cluster comparada com a variabilidade total.
+
+## Agrupamento não hierárquico {.tabset}
+
+Os métodos não-hierárquicos da análise de cluster são caracterizados pela necessidade de definir uma partição inicial e pela flexibilidade, uma vez que os elementos podem ser trocados de grupo durante a execução do algoritmo.
+
+![an image caption Source: Ultimate Funny Dog Videos Compilation 2013.](https://shabal.in/visuals/kmeans/left.gif)
+
+### K = 2
+
+```{r}
+df_group <- df_bahia[,-c(1:3)]
+kmean <- kmeans(df_group, 2)
+perc <-round(kmean$betweenss/kmean$totss*100,2)
+
+df_group$grupo <- factor(kmean$cluster)
+
+ggpairs(df_group,  aes(color = grupo, alpha=0.75), lower=list(continuous="smooth"))  + theme_minimal() + labs(title=paste0("Percentual de variabilidade dentre grupos = ", perc, "%"))
+```
+
+### K = 3 
+```{r}
+df_group <- df_bahia[,-c(1:3)]
+kmean <- kmeans(df_group, 3)
+perc <-round(kmean$betweenss/kmean$totss*100,2)
+
+df_group$grupo <- factor(kmean$cluster)
+
+ggpairs(df_group,  aes(color = grupo, alpha=0.75), lower=list(continuous="smooth"))  + theme_minimal() + labs(title=paste0("Percentual de variabilidade dentre grupos = ", perc, "%"))
+```
+
+### K = 4
+
+```{r}
+df_group <- df_bahia[,-c(1:3)]
+kmean <- kmeans(df_group, 4)
+perc <-round(kmean$betweenss/kmean$totss*100,2)
+
+df_group$grupo <- factor(kmean$cluster)
+
+ggpairs(df_group,  aes(color = grupo, alpha=0.75), lower=list(continuous="smooth"))  + theme_minimal() + labs(title=paste0("Percentual de variabilidade dentre grupos = ", perc, "%"))
+```
+
+Decidimos selecionar 3 grupos de cluster e podemos interpretá-los como municípios com desempenho baixo, médio e alto.
+
+## Visualizando Resultado
+
+Pra finalizar essa análise, gostaríamos de ver os grupos formados em um mapa pra indentificar possíveis padrões de desempenho em localizações dos municípios da Bahia.
+
+```{r}
+library(sf)
+
+set.seed(09091997)
+kmean <- kmeans(df_bahia[,-c(1:3)], 3)
+
+df_bahia$grupo <- factor(kmean$cluster, levels = c(2, 1, 3), labels = c("Baixo", "Médio", "Alto"))
+
+shp_ba <- st_read("data/ba_municipios/29MUE250GC_SIR.shp") %>% 
+  mutate(CD_GEOCODM = as.numeric(CD_GEOCODM))
+
+df_plot <- full_join(shp_ba, df_bahia, by = c("CD_GEOCODM" = "CO_MUNICIPIO_RESIDENCIA"))
+
+ggplot(df_plot, aes(fill = grupo)) + geom_sf(color = "white") + 
+  theme_void() +
+  scale_fill_manual(values = c("red", "grey", "green")) + 
+  labs(fill = "", title = "Agrupamento de acordo com desempenho \n médio na prova do Enem, Municípios da Bahia, 2016") +
+    theme(plot.title = element_text(hjust = 0.5))
+```
+
+# 2. Análise Discriminante
+
+A análise discriminante é uma técnica da estatística multivariada utilizada para discriminar e classificar objetos.
+Nessa etapa a gente queria ver se conseguiamos separar os municípios de estados diferentes unicamente de acordo com seu desempenho médio. 
+
+```{r}
+df$uf_res <- factor(df$uf_res, levels = c(29, 26),
+                    labels = c("Bahia","Pernambuco"))
+
+head(df) %>% kable()
+```
+
+
+## Descritiva
+
+Veja na Figura abaixo que a Bahia tem mais municípios que Pernambuco e que apesar de o desempenho de Pernambuco ser um pouco maior que o da Bahia, essa diferença não é tão grande.
+```{r}
+df %>% 
+  select(-X1, -CO_MUNICIPIO_RESIDENCIA) %>%  
+ggpairs(aes(color = uf_res, alpha = 0.6), lower=list(continuous="smooth")) + theme_bw() + theme(plot.title=element_text(face='bold',color='black',hjust=0.5,size=12))
+```
+
+
+## Classificação {.tabset}
+
+Nessa etapa iremos rodar os modelos para tentar discriminar os municípios entre os estados de acordo com sua prova no ENEM.
+
+### Amostra original
+
+```{r}
+library(DiscriMiner)
+df_model <- df
+
+modelo <- linDA(df_model$uf_res, variables = df_model[,4:8], prob = T, validation = "crossval")
+
+df_model$predicted <- modelo$classification
+
+sens_lda <- modelo$confusion[1,1]/417
+esp_lda <- modelo$confusion[2,2]/185
+
+metrics <- c(taxa_erro = modelo$error_rate, sensibilidade = sens_lda,
+  especificidade = esp_lda)
+
+shp_pe <- st_read("data/pe_municipios/26MUE250GC_SIR.shp") %>% 
+  mutate(CD_GEOCODM = as.numeric(CD_GEOCODM))
+
+shp_all <- bind_rows(shp_pe, shp_ba) 
+df_plot <- inner_join(shp_all, df_model, by = c("CD_GEOCODM" = "CO_MUNICIPIO_RESIDENCIA"))
+
+ufs <- df_plot %>% 
+  group_by(uf_res) %>% 
+  summarise(geometry = st_combine(geometry))
+
+ggplot() + 
+      geom_sf(
+    data = ufs,
+    mapping = aes(color = uf_res),
+    lwd = 2,
+    alpha= 0
+    ) +
+  geom_sf(
+    data = df_plot %>% mutate(error = uf_res == predicted),
+    mapping = aes(fill = error),
+    color = 'white', lwd = 0.5) +
+
+    scale_fill_manual(values = c("red", "green")) + 
+  labs(subtitle = paste0("Acurácia: ", 100*round(1-metrics['taxa_erro'], 3), 
+                         " Sensibilidade: ", 100*round(metrics['sensibilidade'], 3), 
+                         " Especificidade: ", 100*round(metrics['especificidade'], 3))) +
+  theme_void() +
+  theme(legend.position = "none")
+
+```
+
+### Amostra balanceada
+
+Aqui vamos balancear as amostras para termos as bases com o mesmo tamanho.
+
+```{r}
+bahia <- df %>% filter(uf_res == "Bahia")
+pernambuco <- df %>% filter(uf_res == "Pernambuco")
+
+id <- sample(1:417, 185, replace = F)
+bahia <- bahia[id, ]
+
+df_model <- rbind(bahia, pernambuco)
+
+modelo <- linDA(df_model$uf_res, variables = df_model[,4:8], prob = T, validation = "crossval")
+
+df_model$predicted <- modelo$classification
+
+sens_lda <- modelo$confusion[1,1]/185
+esp_lda <- modelo$confusion[2,2]/185
+
+metrics <- c(taxa_erro = modelo$error_rate, sensibilidade = sens_lda,
+  especificidade = esp_lda)
+
+shp_pe <- st_read("data/pe_municipios/26MUE250GC_SIR.shp") %>% 
+  mutate(CD_GEOCODM = as.numeric(CD_GEOCODM))
+
+shp_all <- bind_rows(shp_pe, shp_ba) 
+df_plot <- full_join(shp_all, df_model, by = c("CD_GEOCODM" = "CO_MUNICIPIO_RESIDENCIA"))
+
+ufs <- df_plot %>% 
+  group_by(uf_res) %>% 
+  summarise(geometry = st_combine(geometry))
+
+ggplot() + 
+      geom_sf(
+    data = ufs,
+    mapping = aes(color = uf_res),
+    lwd = 1.5,
+    alpha= 0
+    ) +
+  geom_sf(
+    data = df_plot %>% mutate(error = uf_res == predicted),
+    mapping = aes(fill = error),
+    color = 'white', lwd = 0.5) +
+
+    scale_fill_manual(values = c("red", "green")) + 
+  labs(subtitle = paste0("Acurácia: ", 100*round(1-metrics['taxa_erro'], 3), 
+                         " Sensibilidade: ", 100*round(metrics['sensibilidade'], 3), 
+                         " Especificidade: ", 100*round(metrics['especificidade'], 3))) +
+  theme_void() +  theme(legend.position = "none")
+
+```
+
+
