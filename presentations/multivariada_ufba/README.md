@@ -49,3 +49,18 @@ Pra finalizar essa análise, gostaríamos de ver os grupos formados em um mapa p
     <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-15-1.png"> 
 </p>
 
+# 2. Análise Discriminante
+
+A análise discriminante é uma técnica da estatística multivariada utilizada para discriminar e classificar objetos.
+Nessa etapa a gente queria ver se conseguiamos separar os municípios de estados diferentes unicamente de acordo com seu desempenho médio. 
+Veja na Figura abaixo que a Bahia tem mais municípios que Pernambuco e que apesar de o desempenho de Pernambuco ser um pouco maior que o da Bahia, essa diferença não é tão grande.
+
+<p align="center" width="100%">
+    <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-17-1.png"> 
+</p>
+
+Nessa etapa iremos rodar o modelo de discriminante linear para tentar discriminar os municípios entre os estados de acordo com sua prova no ENEM.
+
+<p align="center" width="100%">
+    <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-19-1.png"> 
+</p>
