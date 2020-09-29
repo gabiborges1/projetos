@@ -24,7 +24,10 @@ Veja na figura abaixo que as variáveis de nota estão altamente correlacionadas
 Um indicador de que não existem municípios com desemepnho alto em matemática e péssimo em redação (por exemplo.). 
 Além disso, a característica da métrica ser uma média de uma variável contínua fez com que ela tivesse tendência de comportamento simétrico.
 
-![](agrupamento_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+<p align="center" width="100%">
+    <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-3-1.png"> 
+</p>
+
 
 Os metódos de agrupamento não hierárquico foram utilizados para identificarmos descritivamente o número de clusters necessários para agrupar os municípios da Bahia.
 Os resultados dos algoritmos não hierárquicos corroboram para um número de cluster entre 2 a 4. 
@@ -34,9 +37,15 @@ O melhor cluster será escolhido com base na proporção de variabilidade entre 
 Os métodos não-hierárquicos da análise de cluster são caracterizados pela necessidade de definir uma partição inicial e pela flexibilidade, uma vez que os elementos podem ser trocados de grupo durante a execução do algoritmo.
 Decidimos selecionar 3 grupos de cluster e podemos interpretá-los como municípios com desempenho baixo, médio e alto.
 
-![](agrupamento_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+<p align="center" width="100%">
+    <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-13-1.png"> 
+</p>
 
 ## Visualizando resultado
 
 Pra finalizar essa análise, gostaríamos de ver os grupos formados em um mapa pra indentificar possíveis padrões de desempenho em localizações dos municípios da Bahia.
-![](agrupamento_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+
+<p align="center" width="100%">
+    <img src="https://github.com/gabiborges1/projetos/blob/master/presentations/multivariada_ufba/agrupamento_files/figure-html/unnamed-chunk-15-1.png"> 
+</p>
+
