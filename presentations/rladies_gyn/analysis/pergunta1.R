@@ -42,7 +42,7 @@ forecast_before <- df_before_2020 %>%
   select(data, emb_desemb_no_mes) %>% 
   timetk::tk_ts(start = c(2012, 1), frequency = 12) %>% 
   ets() %>% 
-  forecast(h = 20) %>% 
+  forecast(h = 26) %>% 
   sw_sweep(fitted = FALSE) %>% 
   mutate(model = "before2020") %>% 
   filter(key == "forecast")
@@ -120,6 +120,7 @@ list_plots <- map(
       )
   }
 )
+
 
 # Juntando todos os gráficos
 ggarrange(plotlist = list_plots, ncol = 1, common.legend = TRUE, legend="top")               

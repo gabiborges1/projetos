@@ -15,7 +15,7 @@ forecast_calculate <- function(df, var_name = "emb_desemb_no_mes") {
     select(data, !!var_name) %>% 
     timetk::tk_ts(start = c(2012, 1), frequency = 12) %>% 
     ets() %>% 
-    forecast(h = 20) %>% 
+    forecast(h = 26) %>% 
     sw_sweep(fitted = FALSE) %>% 
     mutate(model = "before2020") %>% 
     filter(key == "forecast")
