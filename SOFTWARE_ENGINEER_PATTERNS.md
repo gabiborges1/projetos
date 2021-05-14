@@ -17,6 +17,8 @@ Using branches is the solution to these commonplace development problems.
 
 Not convinced yet? you should read [it](https://www.webfx.com/blog/web-design/why-you-should-use-git/)
 
+### How to integrate task planning/management and gitflow?
+
 ### Best practices to high quality code
 
 - **Practice test driven develop**: code should have unit testing with at least 50% overall code coverage.
