@@ -29,4 +29,4 @@ Not convinced yet? you should read [it](https://www.webfx.com/blog/web-design/wh
 
 ### Extra
 
-[Why you should use docker for data science?](https://medium.com/analytics-vidhya/why-you-should-use-docker-to-simplify-data-science-machine-learning-development-environment-d6a1188d8ee1#:~:text=Using%20Docker%20in%20Data%20Science,one%20environment%20breaking%20other%20environments.)
+- Why you should use docker for data science? [here](https://medium.com/analytics-vidhya/why-you-should-use-docker-to-simplify-data-science-machine-learning-development-environment-d6a1188d8ee1#:~:text=Using%20Docker%20in%20Data%20Science,one%20environment%20breaking%20other%20environments.) and [here](https://blog.dsbrigade.com/docker-para-ciencia-de-dados/)
