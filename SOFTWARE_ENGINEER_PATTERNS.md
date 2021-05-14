@@ -18,3 +18,9 @@ Using branches is the solution to these commonplace development problems.
 Not convinced yet? you should read [it](https://www.webfx.com/blog/web-design/why-you-should-use-git/)
 
 ### Best practices to high quality code
+
+- **Practice test driven develop**: code should have unit testing with at least 50% overall code coverage.
+- **Team/Pair Programming**: code should be reviewed because it encourages discussion of code design 
+- **Exception Handling**: code should handle exceptions to avoid retrieve errors to client
+- **Keep It Simple Stupid**: simple code is elegant and can be harder to write but easier to maintain and understand
+- **Use appropriate logging levels**: appropriate logging levels helps admins and developers deal with log messages appropriately
