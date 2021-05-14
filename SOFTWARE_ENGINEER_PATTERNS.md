@@ -17,7 +17,7 @@ Using branches is the solution to these commonplace development problems.
 
 Not convinced yet? you should read [it](https://www.webfx.com/blog/web-design/why-you-should-use-git/)
 
-### How to integrate task planning/management and gitflow?
+### How to manage/plan tasks _gitflowly_?
 
 ### Best practices to high quality code
 
