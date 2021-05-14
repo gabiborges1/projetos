@@ -24,3 +24,7 @@ Not convinced yet? you should read [it](https://www.webfx.com/blog/web-design/wh
 - **Exception Handling**: code should handle exceptions to avoid retrieve errors to client
 - **Keep It Simple Stupid**: simple code is elegant and can be harder to write but easier to maintain and understand
 - **Use appropriate logging levels**: appropriate logging levels helps admins and developers deal with log messages appropriately
+
+### Extra
+
+[Why you should use docker for data science?](https://medium.com/analytics-vidhya/why-you-should-use-docker-to-simplify-data-science-machine-learning-development-environment-d6a1188d8ee1#:~:text=Using%20Docker%20in%20Data%20Science,one%20environment%20breaking%20other%20environments.)
