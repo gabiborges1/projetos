@@ -1,6 +1,6 @@
 ## References
 
-### How to manage/planning tasks? 
+### How to manage/plan tasks? 
 
  
 ### [The best gitflow](https://www.atlassian.com/br/git/tutorials/comparing-workflows/gitflow-workflow)
