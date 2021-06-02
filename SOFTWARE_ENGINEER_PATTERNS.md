@@ -2,6 +2,12 @@
 
 ### How to manage/plan tasks? 
 
+One of the best ways to stay organized at work is with a well-structured plan. A personal task management plan helps you to meet your deadlines – and help others meet theirs. 
+
+- Rework big goals into small objectives
+  - Large scale goal: learn to swim; smaller objectives: learn to inhale and exhale into the water, learn to float, learn to kick and so on...
+- Clarify objectives by converting them into a series of tasks
+  - Objective: learn to inhale and exhale into the water; Taks: breathing train for 10 min out of the water, breathing train for 10 min into the water and so on..
  
 ### [The best gitflow](https://www.atlassian.com/br/git/tutorials/comparing-workflows/gitflow-workflow)
 
