@@ -27,7 +27,7 @@ Not convinced yet? you should read [it](https://www.webfx.com/blog/web-design/wh
 
 In this plan, each task/series of tasks has its respective branch in a given repository. The task will be classified as a _feature_/_hotfix_/_release_ branch depending on what it is about.
 
-Then, the task life cycle will be a branch life cycle. Its management will follow the gitflow.
+Then, the task life cycle will follow a branch life cycle:
 - Merged branches are _Done_ tasks
 - Open issues without branches are _ToDo_ tasks
 - Active branches are _Doing_ tasks
