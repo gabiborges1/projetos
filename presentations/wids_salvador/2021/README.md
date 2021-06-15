@@ -4,6 +4,8 @@ O minicurso de shiny é um curso expositivo. A ideia é entender sobre os princi
 1. User Interface - UI
 2. Server
 
+O dashboard criado está disponível em: https://gabrielaborges.shinyapps.io/widsapp/
+
 # Como rodar a aplicação?
 
 - Instale o R ([Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-20-04-pt), [Windows](https://cran.r-project.org/bin/windows/base/))
