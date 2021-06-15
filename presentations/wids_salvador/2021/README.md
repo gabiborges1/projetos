@@ -23,7 +23,7 @@ O minicurso de shiny é um curso expositivo. A ideia é entender sobre os princi
 # E agora?
 
 - Se sinta livre para usar, mudar, alterar, copiar o dashboard estudado (Inclusive enviar PR pro repositório)
-- Construiu um projeto legal com essa base? Uma visualização? Me manda para eu ver pelo linkedIn ou por email ^.^
+- Construiu um projeto legal com essa base? Uma visualização? Me manda pelo linkedIn ou por email ^.^
 
 # Onde aprender? 
 
