@@ -51,6 +51,7 @@ Basically, I always use an image for development purposes (jupyter) and an image
 - Create a Dockerfile
 - Create a .env
 - Create a .docker-compose.yml to orchestrate the two images.
+- Docker build, docker up and enjoy!
 
 # Wrapping it up
 
