@@ -40,9 +40,9 @@ open source projects and independent software vendors.
 
 You can find a lot of data science images that you can use in your projects:
 
-- (python)[https://hub.docker.com/\_/python]: A docker image containing python
-- (ml-tooling/ml-workspace)[https://github.com/ml-tooling/ml-workspace]: Docker image with a variety of popular data science libraries (e.g., Tensorflow, PyTorch, Keras, Sklearn) and dev tools (e.g., Jupyter, VS Code, Tensorboard)
-- (jupyter/datascience-notebook): Docker image containing Jupyter application includes libraries for data analysis from the Julia, Python, and R communities
+- [python](https://hub.docker.com/\_/python): A docker image containing python
+- [ml-tooling/ml-workspace](https://github.com/ml-tooling/ml-workspace): Docker image with a variety of popular data science libraries (e.g., Tensorflow, PyTorch, Keras, Sklearn) and dev tools (e.g., Jupyter, VS Code, Tensorboard)
+- [jupyter/datascience-notebook](https://hub.docker.com/r/jupyter/datascience-notebook/): Docker image containing Jupyter application includes libraries for data analysis from the Julia, Python, and R communities
 
 # How do I use Docker in my data science projects?
 
